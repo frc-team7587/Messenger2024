@@ -136,11 +136,7 @@ public class DriveTrain extends SubsystemBase {
 
         var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
             isFieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    xSpeedDelivered,
-                    ySpeedDelivered,
-                    rotationDelivered,
-                    gyro.getRotation2d())
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotationDelivered, gyro.getRotation2d())
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotationDelivered));
         
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
@@ -206,7 +202,6 @@ public class DriveTrain extends SubsystemBase {
 
     /**
      * Sets the swerve ModuleStates.
-     *
      * @param desiredStates The desired SwerveModule states.
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -225,7 +220,7 @@ public class DriveTrain extends SubsystemBase {
         rearRightModule.resetEncoder();
     }
 
-    /** Zeroes the heading of the robot. */
+    /** Resets the heading of the robot. */
     public void resetHeading() {
         gyro.reset();
     }
