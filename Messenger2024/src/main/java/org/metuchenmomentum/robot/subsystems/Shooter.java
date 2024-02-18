@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package org.metuchenmomentum.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;

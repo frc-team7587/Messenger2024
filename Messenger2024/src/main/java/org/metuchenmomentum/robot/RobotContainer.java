@@ -2,9 +2,15 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package org.metuchenmomentum.robot;
 
 import java.util.List;
+
+import org.metuchenmomentum.robot.Constants.AutoConstants;
+import org.metuchenmomentum.robot.Constants.DriveConstants;
+import org.metuchenmomentum.robot.Constants.IOConstants;
+
+import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -20,13 +26,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IOConstants;
-import frc.robot.subsystems.DriveTrain;
-
 public class RobotContainer {
-    private final DriveTrain drivetrain = new DriveTrain();
+    private final SwerveDrive drivetrain = new SwerveDrive();
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
 
@@ -35,12 +36,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        /**
-         * CONTROLS
-         *  - Left Stick: Swerve Translation
-         *  - Right Stick: Swerve Rotation
-         */
-
         drivetrain.setDefaultCommand(
             new RunCommand(
                 () -> drivetrain.drive(

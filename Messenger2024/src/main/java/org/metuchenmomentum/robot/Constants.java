@@ -1,4 +1,4 @@
-package frc.robot;
+package org.metuchenmomentum.robot;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -68,8 +68,8 @@ public final class Constants {
         public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
         public static final double kDriveWheel = (kDrivingMotorFreeSpeed * kWheelCircumference) / kDrivingMotorReduction;
 
-        public static final double kDrivingEncoderPositionFactor = (kWheelDiameter * Math.PI) / kDrivingMotorReduction; // meters
-        public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameter * Math.PI) / kDrivingMotorReduction) / 60.0; // meters per second
+        public static final double kDrivingEncoderPositionFactor = (kWheelDiameter * Math.PI) / kDrivingMotorReduction; // m
+        public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameter * Math.PI) / kDrivingMotorReduction) / 60.0; // m/s
 
         public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // rad
         public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // rad/s
@@ -104,10 +104,10 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeed = 3; // m/s^2
-        public static final double kMaxAcceleration = 3; // m/s^2
+        public static final double kMaxSpeed = 3; // m/s
+        public static final double kMaxAcceleration = 3; // m/s/s
         public static final double kMaxAngularSpeed = Math.PI; // rad/s
-        public static final double kMaxAngularAcceleration = Math.PI; // rad/s^2
+        public static final double kMaxAngularAcceleration = Math.PI; // rad/s/s
 
         public static final double kPXController = 1;
         public static final double kPYController = 1;

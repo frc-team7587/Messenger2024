@@ -1,19 +1,21 @@
-package frc.robot.subsystems;
+package org.metuchenmomentum.robot.subsystems.drive;
+
+import org.metuchenmomentum.robot.Constants.ModuleConstants;
+
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
 
-import frc.robot.Constants.ModuleConstants;
-
-public class SwerveModule {
+/** A swerve module consisting of a driving and turning motor. */
+public class SwerveModule implements SwerveModuleIO {
     private final CANSparkMax drivingMotor;
     private final CANSparkMax turningMotor;
 
@@ -80,33 +82,51 @@ public class SwerveModule {
         drivingEncoder.setPosition(0);
     }
 
+    @Override
+    public double getDrivingPosition() {
+        return drivingEncoder.getPosition();
+    }
+
+    @Override
+    public double getTurningPosition() {
+        return turningEncoder.getPosition();
+    }
+
+    @Override
+    public double getDrivingVelocity() {
+        return drivingEncoder.getVelocity();
+    }
+
+    @Override
+    public double getTurningVelocity() {
+        return turningEncoder.getVelocity();
+    }
+
+    @Override
     public SwerveModuleState getState() {
-        // Apply chassis angular offset to the encoder position to get the position relative to the chassis.
-        return new SwerveModuleState(drivingEncoder.getVelocity(), new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
+        return new SwerveModuleState(getDrivingVelocity(), new Rotation2d(getTurningPosition() - chassisAngularOffset));
     }
 
+    @Override
     public SwerveModulePosition getPosition() {
-        // Apply chassis angular offset to the encoder position to get the position relative to the chassis.
-        return new SwerveModulePosition(drivingEncoder.getPosition(), new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
+        return new SwerveModulePosition(getDrivingPosition(), new Rotation2d(getTurningPosition() - chassisAngularOffset));
     }
 
+    @Override
     public void setDesiredState(SwerveModuleState desiredState) {
-        // Apply chassis angular offset to the desired state.
         SwerveModuleState correctedDesiredState = new SwerveModuleState();
         correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
         correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(chassisAngularOffset));
 
-        // Optimize the reference state to avoid spinning further than 90 degrees.
-        SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
-            new Rotation2d(turningEncoder.getPosition()));
-
-        // Command driving and turning SPARKS MAX towards their respective setpoints.
+        SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState, new Rotation2d(getTurningPosition()));
+        
         drivingPIDController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
         turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
         this.desiredState = desiredState;
     }
 
+    @Override
     public void resetEncoder() {
         drivingEncoder.setPosition(0);
     }
