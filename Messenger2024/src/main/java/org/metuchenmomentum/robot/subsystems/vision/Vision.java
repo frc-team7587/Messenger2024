@@ -1,4 +1,4 @@
-package org.metuchenmomentum.robot.subsystems;
+package org.metuchenmomentum.robot.subsystems.vision;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
