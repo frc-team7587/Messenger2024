@@ -1,23 +1,23 @@
 package org.metuchenmomentum.robot.subsystems.climber;
 
 public interface ClimberIO {
-    /** Raises the left hook. */
-    public void raiseLeftHook();
+    /** 
+     * Sets the speed of the left hook.
+     * @param speed The speed to set the left hook to.
+     */
+    public void setLeftHookSpeed(double speed);
 
-    /** Raises the right hook. */
-    public void raiseRightHook();
+    /**
+     * Sets the speed of the right hook.
+     * @param speed The speed to set the right hook to.
+     */
+    public void setRightHookSpeed(double speed);
 
-    /** Lowers the left hook. */
-    public void lowerLeftHook();
-
-    /** Lowers the right hook. */
-    public void lowerRightHook();
-
-    /** Raises the hooks. */
-    public void raiseHooks();
-
-    /** Lowers the hooks. */
-    public void lowerHooks();
+    /**
+     * Sets the speed of both hooks.
+     * @param speed The speed to set the hooks to.
+     */
+    public void setHookSpeeds(double speed);
 
     /**
      * Returns the height of the left hook.
