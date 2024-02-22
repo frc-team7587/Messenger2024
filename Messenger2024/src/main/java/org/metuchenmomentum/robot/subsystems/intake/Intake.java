@@ -1,5 +1,7 @@
 package org.metuchenmomentum.robot.subsystems.intake;
 
+import org.metuchenmomentum.robot.Constants.IntakeConstants;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -11,10 +13,10 @@ public class Intake extends SubsystemBase {
     }
 
     public Command intakeNote() {
-        return run(() -> intake.setIntakeSpeed(1));
+        return run(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed));
     }
 
     public Command releaseNote() {
-        return run(() -> intake.setIntakeSpeed(-1));
+        return run(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeOutSpeed));
     }
 }

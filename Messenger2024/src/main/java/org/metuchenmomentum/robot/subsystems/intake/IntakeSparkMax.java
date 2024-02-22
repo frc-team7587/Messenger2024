@@ -3,42 +3,57 @@ package org.metuchenmomentum.robot.subsystems.intake;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import org.metuchenmomentum.robot.Constants.IntakeConstants;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 
 public class IntakeSparkMax implements IntakeIO {
-    private final CANSparkMax pivot;
-    private final CANSparkMax intake;
+    private final CANSparkMax pivotMotor;
+    private final CANSparkMax intakeMotor;
 
     private final RelativeEncoder pivotEncoder;
     private final SparkPIDController pivotController;
 
     public IntakeSparkMax() {
-        pivot = new CANSparkMax(0, MotorType.kBrushless);
-        intake = new CANSparkMax(0, MotorType.kBrushless);
+        pivotMotor = new CANSparkMax(IntakeConstants.kIntakePivotMotorID, MotorType.kBrushless);
+        intakeMotor = new CANSparkMax(IntakeConstants.kIntakeMotorID, MotorType.kBrushless);
 
-        pivotEncoder = pivot.getEncoder();
-        pivotController = pivot.getPIDController();
+        pivotMotor.restoreFactoryDefaults();
+        intakeMotor.restoreFactoryDefaults();
 
-        intake.setIdleMode(IdleMode.kBrake);
-        pivot.setIdleMode(IdleMode.kBrake);
+        intakeMotor.setIdleMode(IdleMode.kBrake);
+        pivotMotor.setIdleMode(IdleMode.kBrake);
+
+        pivotEncoder = pivotMotor.getEncoder();
+        pivotController = pivotMotor.getPIDController();
+
+        pivotController.setP(1);
+        pivotController.setI(0);
+        pivotController.setD(0.1);
+        pivotController.setFF(0);
+        pivotController.setOutputRange(-1, 1);
+
+        pivotMotor.burnFlash();
+        intakeMotor.burnFlash();
     }
 
     @Override
     public void setIntakeSpeed(double speed) {
-        intake.set(speed);
+        intakeMotor.set(speed);
     }
 
     @Override
     public void setPivotSpeed(double speed) {
-        pivot.set(speed);
+        pivotMotor.set(speed);
     }
 
     @Override
-    public void setPivotPosition(double target) {
-        pivotController.setReference(target, ControlType.kPosition);
+    public void setPivotPosition(double setpoint) {
+        pivotController.setReference(setpoint, ControlType.kPosition);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.metuchenmomentum.robot.subsystems.shooter;
 
+import org.metuchenmomentum.robot.Constants.ShooterConstants;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -7,30 +9,48 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterSparkMax implements ShooterIO {
-    private final CANSparkMax pivot;
-    private final CANSparkMax shooter;
-    private final CANSparkMax indexer;
+    private final CANSparkMax pivotMotor;
+    private final CANSparkMax shootingMotor;
+    private final CANSparkMax indexingMotor;
 
     private final RelativeEncoder pivotEncoder;
     private final SparkPIDController pivotController;
 
     public ShooterSparkMax() {
-        pivot = new CANSparkMax(0, MotorType.kBrushless);
-        shooter = new CANSparkMax(0, MotorType.kBrushless);
-        indexer = new CANSparkMax(0, MotorType.kBrushless);
+        pivotMotor = new CANSparkMax(ShooterConstants.kShooterPivotMotorID, MotorType.kBrushless);
+        shootingMotor = new CANSparkMax(ShooterConstants.kShootingMotorID, MotorType.kBrushless);
+        indexingMotor = new CANSparkMax(ShooterConstants.kIndexingMotorID, MotorType.kBrushless);
 
-        pivotEncoder = pivot.getEncoder();
-        pivotController = pivot.getPIDController();
+        pivotMotor.restoreFactoryDefaults();
+        shootingMotor.restoreFactoryDefaults();
+        indexingMotor.restoreFactoryDefaults();
+
+        pivotMotor.setSmartCurrentLimit(50);
+        shootingMotor.setSmartCurrentLimit(80);
+        indexingMotor.setSmartCurrentLimit(20);
+
+        pivotEncoder = pivotMotor.getEncoder();
+        pivotController = pivotMotor.getPIDController();
+
+        pivotController.setP(1.0);
+        pivotController.setI(0.0);
+        pivotController.setD(0.1);
+        pivotController.setFF(0.0);
+        pivotController.setOutputRange(-1, 1);
+
+        pivotMotor.burnFlash();
+        shootingMotor.burnFlash();
+        indexingMotor.burnFlash();
     }
 
     @Override
     public void setIndexerSpeed(double speed) {
-        indexer.set(speed);
+        indexingMotor.set(speed);
     }
 
     @Override
     public void setShooterSpeed(double speed) {
-        shooter.set(speed);
+        shootingMotor.set(speed);
     }
 
     @Override

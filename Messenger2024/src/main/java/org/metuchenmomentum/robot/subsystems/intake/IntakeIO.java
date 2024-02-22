@@ -17,7 +17,7 @@ public interface IntakeIO {
      * Sets the pivot to a specified posiiton.
      * @param target The position to set the pivot to.
      */
-    public void setPivotPosition(double target);
+    public void setPivotPosition(double setpoint);
 
     /**
      * Gets the position of the pivot.
