@@ -1,6 +1,7 @@
 package org.metuchenmomentum.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -20,6 +21,9 @@ public class IntakeSparkMax implements IntakeIO {
 
         pivotEncoder = pivot.getEncoder();
         pivotController = pivot.getPIDController();
+
+        intake.setIdleMode(IdleMode.kBrake);
+        pivot.setIdleMode(IdleMode.kBrake);
     }
 
     @Override
