@@ -15,6 +15,14 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command launchNote() {
-        return run(() -> shooter.setIndexerSpeed((1)));
+        return run(() -> shooter.setIndexerSpeed(1));
+    }
+
+    public Command rotateUp() {
+        return run(() -> shooter.turnShooter(0.5));
+    }
+
+    public Command rotateDown() {
+        return run(() -> shooter.turnShooter(-0.5));
     }
 }

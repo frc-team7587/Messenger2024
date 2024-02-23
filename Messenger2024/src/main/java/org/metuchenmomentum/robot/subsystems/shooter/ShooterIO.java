@@ -24,4 +24,5 @@ public interface ShooterIO {
      * @return The position of the shooter.
      */
     public double getShooterPosition();
+    public void turnShooter(double speed);
 }

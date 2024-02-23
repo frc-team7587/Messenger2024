@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterSparkMax implements ShooterIO {
@@ -25,6 +26,10 @@ public class ShooterSparkMax implements ShooterIO {
         shootingMotor.restoreFactoryDefaults();
         indexingMotor.restoreFactoryDefaults();
 
+        pivotMotor.setIdleMode(IdleMode.kBrake);
+        shootingMotor.setIdleMode(IdleMode.kBrake);
+        indexingMotor.setIdleMode(IdleMode.kBrake);
+
         pivotMotor.setSmartCurrentLimit(50);
         shootingMotor.setSmartCurrentLimit(80);
         indexingMotor.setSmartCurrentLimit(20);
@@ -32,7 +37,7 @@ public class ShooterSparkMax implements ShooterIO {
         pivotEncoder = pivotMotor.getEncoder();
         pivotController = pivotMotor.getPIDController();
 
-        pivotController.setP(1.0);
+        pivotController.setP(0.5);
         pivotController.setI(0.0);
         pivotController.setD(0.1);
         pivotController.setFF(0.0);
@@ -61,5 +66,10 @@ public class ShooterSparkMax implements ShooterIO {
     @Override
     public double getShooterPosition() {
         return pivotEncoder.getPosition();
+    }
+
+    @Override
+    public void turnShooter(double speed) {
+        pivotMotor.set(speed);
     }
 }

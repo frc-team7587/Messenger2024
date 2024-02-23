@@ -24,4 +24,6 @@ public interface IntakeIO {
      * @return The position of the pivot.
      */
     public double getPivotPosition();
+
+    public void turnIntake(double speed);
 }

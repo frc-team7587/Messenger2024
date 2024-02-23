@@ -19,4 +19,12 @@ public class Intake extends SubsystemBase {
     public Command releaseNote() {
         return run(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeOutSpeed));
     }
+
+    public Command turnToGround() {
+        return run(() -> intake.turnIntake(0.5));
+    }
+
+    public Command turnToShooter() {
+        return run(() -> intake.turnIntake(-0.5));
+    }
 }

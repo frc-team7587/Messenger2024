@@ -31,9 +31,9 @@ public class IntakeSparkMax implements IntakeIO {
         pivotEncoder = pivotMotor.getEncoder();
         pivotController = pivotMotor.getPIDController();
 
-        pivotController.setP(1);
+        pivotController.setP(0.5);
         pivotController.setI(0);
-        pivotController.setD(0.1);
+        pivotController.setD(0);
         pivotController.setFF(0);
         pivotController.setOutputRange(-1, 1);
 
@@ -59,5 +59,10 @@ public class IntakeSparkMax implements IntakeIO {
     @Override
     public double getPivotPosition() {
         return pivotEncoder.getPosition();
+    }
+
+    @Override
+    public void turnIntake(double speed) {
+        pivotMotor.set(speed);
     }
 }
