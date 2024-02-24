@@ -4,7 +4,10 @@
 
 package org.metuchenmomentum.robot;
 
+import org.metuchenmomentum.robot.subsystems.intake.IntakeSimulation;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -12,9 +15,17 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
 
+    private final IntakeSimulation intakeSim = new IntakeSimulation();
+    private final XboxController controller = new XboxController(0);
+
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        intakeSim.simulationPeriodic();
     }
 
     @Override
@@ -65,7 +76,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-
+        if (controller.getYButtonPressed()) {
+            intakeSim.reachSetpoint();
+        } else {
+            intakeSim.stop();
+        }
     }
 
     @Override
