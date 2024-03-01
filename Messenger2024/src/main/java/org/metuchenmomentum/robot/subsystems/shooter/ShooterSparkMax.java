@@ -1,7 +1,5 @@
 package org.metuchenmomentum.robot.subsystems.shooter;
 
-import org.metuchenmomentum.robot.Constants.ShooterConstants;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -10,52 +8,52 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ShooterSparkMax implements ShooterIO {
-    private final CANSparkMax pivotMotor;
-    private final CANSparkMax shootingMotor;
-    private final CANSparkMax indexingMotor;
+    private final CANSparkMax pivot;
+    private final CANSparkMax shooter;
+    private final CANSparkMax indexer;
 
     private final RelativeEncoder pivotEncoder;
     private final SparkPIDController pivotController;
 
     public ShooterSparkMax() {
-        pivotMotor = new CANSparkMax(ShooterConstants.kShooterPivotMotorID, MotorType.kBrushless);
-        shootingMotor = new CANSparkMax(ShooterConstants.kShootingMotorID, MotorType.kBrushless);
-        indexingMotor = new CANSparkMax(ShooterConstants.kIndexingMotorID, MotorType.kBrushless);
+        pivot = new CANSparkMax(ShooterConstants.kShooterPivotMotorID, MotorType.kBrushless);
+        shooter = new CANSparkMax(ShooterConstants.kShootingMotorID, MotorType.kBrushless);
+        indexer = new CANSparkMax(ShooterConstants.kIndexingMotorID, MotorType.kBrushless);
 
-        pivotMotor.restoreFactoryDefaults();
-        shootingMotor.restoreFactoryDefaults();
-        indexingMotor.restoreFactoryDefaults();
+        pivot.restoreFactoryDefaults();
+        shooter.restoreFactoryDefaults();
+        indexer.restoreFactoryDefaults();
 
-        pivotMotor.setIdleMode(IdleMode.kBrake);
-        shootingMotor.setIdleMode(IdleMode.kBrake);
-        indexingMotor.setIdleMode(IdleMode.kBrake);
+        pivot.setIdleMode(IdleMode.kBrake);
+        shooter.setIdleMode(IdleMode.kBrake);
+        indexer.setIdleMode(IdleMode.kBrake);
 
-        pivotMotor.setSmartCurrentLimit(50);
-        shootingMotor.setSmartCurrentLimit(80);
-        indexingMotor.setSmartCurrentLimit(20);
+        pivot.setSmartCurrentLimit(50);
+        shooter.setSmartCurrentLimit(80);
+        indexer.setSmartCurrentLimit(20);
 
-        pivotEncoder = pivotMotor.getEncoder();
-        pivotController = pivotMotor.getPIDController();
+        pivotEncoder = pivot.getEncoder();
+        pivotController = pivot.getPIDController();
 
-        pivotController.setP(0.5);
-        pivotController.setI(0.0);
-        pivotController.setD(0.1);
-        pivotController.setFF(0.0);
+        setP(0.5);
+        setI(0.0);
+        setD(0.1);
+        setFF(0.0);
         pivotController.setOutputRange(-1, 1);
 
-        pivotMotor.burnFlash();
-        shootingMotor.burnFlash();
-        indexingMotor.burnFlash();
+        pivot.burnFlash();
+        shooter.burnFlash();
+        indexer.burnFlash();
     }
 
     @Override
     public void setIndexerSpeed(double speed) {
-        indexingMotor.set(speed);
+        indexer.set(speed);
     }
 
     @Override
     public void setShooterSpeed(double speed) {
-        shootingMotor.set(speed);
+        shooter.set(speed);
     }
 
     @Override
@@ -70,6 +68,46 @@ public class ShooterSparkMax implements ShooterIO {
 
     @Override
     public void turnShooter(double speed) {
-        pivotMotor.set(speed);
+        pivot.set(speed);
+    }
+
+    @Override
+    public void setP(double p) {
+        pivotController.setP(p);
+    }
+
+    @Override
+    public void setI(double i) {
+        pivotController.setI(i);
+    }
+
+    @Override
+    public void setD(double d) {
+        pivotController.setD(d);
+    }
+
+    @Override
+    public void setFF(double ff) {
+        pivotController.setFF(ff);
+    }
+
+    @Override
+    public double getP() {
+        return pivotController.getP();
+    }
+
+    @Override
+    public double getI() {
+        return pivotController.getI();
+    }
+
+    @Override
+    public double getD() {
+        return pivotController.getD();
+    }
+
+    @Override
+    public double getFF() {
+        return pivotController.getFF();
     }
 }

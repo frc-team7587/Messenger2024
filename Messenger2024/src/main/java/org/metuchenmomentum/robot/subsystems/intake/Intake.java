@@ -1,7 +1,5 @@
 package org.metuchenmomentum.robot.subsystems.intake;
 
-import org.metuchenmomentum.robot.Constants.IntakeConstants;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -20,11 +18,23 @@ public class Intake extends SubsystemBase {
         return run(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeOutSpeed));
     }
 
+    public Command turnToGroundManual() {
+        return run(() -> intake.turnIntake(IntakeConstants.kPivotDownSpeed));
+    }
+
+    public Command turnToShooterManual() {
+        return run(() -> intake.turnIntake(IntakeConstants.kPivotUpSpeed));
+    }
+
     public Command turnToGround() {
-        return run(() -> intake.turnIntake(0.5));
+        return run(() -> intake.setPivotPosition(180));
     }
 
     public Command turnToShooter() {
-        return run(() -> intake.turnIntake(-0.5));
+        return run(() -> intake.setPivotPosition(0));
+    }
+
+    public Command turnToNeutral() {
+        return run(() -> intake.setPivotPosition(90));
     }
 }

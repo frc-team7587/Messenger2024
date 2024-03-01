@@ -19,20 +19,6 @@ public final class Constants {
         public static final int kRightHookMotorID = 15;
     }
 
-    public static final class IntakeConstants {
-        public static final double kIntakeInSpeed = 1.0;
-        public static final double kIntakeOutSpeed = -1.0;
-
-        public static final int kIntakeMotorID = 9;
-        public static final int kIntakePivotMotorID = 10;
-    }
-
-    public static final class ShooterConstants {
-        public static final int kShootingMotorID = 11;
-        public static final int kIndexingMotorID = 12;
-        public static final int kShooterPivotMotorID = 13;
-    }
-
     public static final class DriveConstants {
         // Allowed maximum speeds of the robot
         public static final double kMaxSpeed = 4.8; // m/s

@@ -10,19 +10,35 @@ public class Shooter extends SubsystemBase {
         this.shooter = shooter;
     }
 
-    public Command prepareLaunch() {
-        return run(() -> shooter.setShooterSpeed(1));
+    public Command prepareSpeaker() {
+        return run(() -> shooter.setShooterSpeed(ShooterConstants.kSpeakerShootingSpeed));
+    }
+
+    public Command prepareAmplify() {
+        return run(() -> shooter.setShooterSpeed(ShooterConstants.kAmpShootingSpeed));
     }
 
     public Command launchNote() {
-        return run(() -> shooter.setIndexerSpeed(1));
+        return run(() -> shooter.setIndexerSpeed(ShooterConstants.kIndexerInSpeed));
     }
 
-    public Command rotateUp() {
-        return run(() -> shooter.turnShooter(0.5));
+    public Command pivotUp() {
+        return run(() -> shooter.turnShooter(ShooterConstants.kShooterPivotUpSpeed));
     }
 
-    public Command rotateDown() {
-        return run(() -> shooter.turnShooter(-0.5));
+    public Command pivotDown() {
+        return run(() -> shooter.turnShooter(ShooterConstants.kShooterPivotDownSpeed));
+    }
+
+    public Command turnToAmp() {
+        return run(() -> shooter.setShooterPosition(ShooterConstants.kAmpPosition));
+    }
+
+    public Command turnToHandoff() {
+        return run(() -> shooter.setShooterPosition(ShooterConstants.kHandoffPosition));
+    }
+
+    public Command reset() {
+        return run(() -> shooter.setShooterPosition(ShooterConstants.kNeutralPosition));
     }
 }
