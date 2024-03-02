@@ -11,19 +11,27 @@ public class Intake extends SubsystemBase {
     }
 
     public Command intakeNote() {
-        return run(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed));
+        return startEnd(
+            () -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed),
+            () -> intake.setIntakeSpeed(0));
     }
 
     public Command releaseNote() {
-        return run(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeOutSpeed));
+        return startEnd(
+            () -> intake.setIntakeSpeed(IntakeConstants.kIntakeOutSpeed),
+            () -> intake.setIntakeSpeed(0));
     }
 
     public Command turnToGroundManual() {
-        return run(() -> intake.turnIntake(IntakeConstants.kPivotDownSpeed));
+        return startEnd(
+            () -> intake.turnIntake(IntakeConstants.kPivotDownSpeed),
+            () -> intake.turnIntake(0));
     }
 
     public Command turnToShooterManual() {
-        return run(() -> intake.turnIntake(IntakeConstants.kPivotUpSpeed));
+        return startEnd(
+            () -> intake.turnIntake(IntakeConstants.kPivotUpSpeed),
+            () -> intake.turnIntake(0));
     }
 
     public Command turnToGround() {

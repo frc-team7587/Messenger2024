@@ -11,6 +11,8 @@ import org.metuchenmomentum.robot.Constants.DriveConstants;
 import org.metuchenmomentum.robot.Constants.IOConstants;
 
 import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
+import org.metuchenmomentum.robot.subsystems.intake.Intake;
+import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
+    private final Intake intake = new Intake(new IntakeSparkMax());
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
 
@@ -36,17 +39,22 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        drivetrain.setDefaultCommand(
-            new RunCommand(
-                () -> drivetrain.drive(
-                    -MathUtil.applyDeadband(0.5 * driverController.getLeftY(), IOConstants.kDriveDeadband),
-                    -MathUtil.applyDeadband(0.5 * driverController.getLeftX(), IOConstants.kDriveDeadband),
-                    -MathUtil.applyDeadband(0.5 * driverController.getRightX(), IOConstants.kDriveDeadband),
-                    true,
-                    true 
-                ), drivetrain
-            )
-        );
+        // drivetrain.setDefaultCommand(
+        //     new RunCommand(
+        //         () -> drivetrain.drive(
+        //             -MathUtil.applyDeadband(0.5 * driverController.getLeftY(), IOConstants.kDriveDeadband),
+        //             -MathUtil.applyDeadband(0.5 * driverController.getLeftX(), IOConstants.kDriveDeadband),
+        //             -MathUtil.applyDeadband(0.5 * driverController.getRightX(), IOConstants.kDriveDeadband),
+        //             true,
+        //             true 
+        //         ), drivetrain
+        //     )
+        // );
+
+        driverController.leftBumper().whileTrue(intake.intakeNote());
+        driverController.rightBumper().whileTrue(intake.releaseNote());
+        driverController.y().whileTrue(intake.turnToGroundManual());
+        driverController.a().whileTrue(intake.turnToShooterManual());
     }
 
     public Command getAutonomousCommand() {
