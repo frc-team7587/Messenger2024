@@ -53,6 +53,7 @@ public class RobotContainer {
 
         driverController.leftBumper().whileTrue(intake.intakeNote());
         driverController.rightBumper().whileTrue(intake.releaseNote());
+        
         driverController.y().whileTrue(intake.turnToGroundManual());
         driverController.a().whileTrue(intake.turnToShooterManual());
     }
