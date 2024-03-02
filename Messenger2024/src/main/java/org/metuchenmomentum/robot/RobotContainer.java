@@ -33,6 +33,7 @@ public class RobotContainer {
     private final Intake intake = new Intake(new IntakeSparkMax());
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
+    CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
 
     public RobotContainer() {
         configureBindings();
@@ -50,10 +51,12 @@ public class RobotContainer {
         //         ), drivetrain
         //     )
         // );
-
+        
+        // works
         driverController.leftBumper().whileTrue(intake.intakeNote());
         driverController.rightBumper().whileTrue(intake.releaseNote());
         
+        // needs fixing
         driverController.y().whileTrue(intake.turnToGroundManual());
         driverController.a().whileTrue(intake.turnToShooterManual());
     }

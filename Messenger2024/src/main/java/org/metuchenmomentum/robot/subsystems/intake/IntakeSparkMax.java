@@ -59,11 +59,6 @@ public class IntakeSparkMax implements IntakeIO {
     }
 
     @Override
-    public void turnIntake(double speed) {
-        pivotMotor.set(speed);
-    }
-
-    @Override
     public void setP(double p) {
         pivotController.setP(p);
     }

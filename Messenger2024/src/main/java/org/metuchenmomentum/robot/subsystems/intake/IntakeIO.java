@@ -25,8 +25,6 @@ public interface IntakeIO {
      */
     public double getPivotPosition();
 
-    public void turnIntake(double speed);
-
     public void setP(double p);
 
     public void setI(double i);

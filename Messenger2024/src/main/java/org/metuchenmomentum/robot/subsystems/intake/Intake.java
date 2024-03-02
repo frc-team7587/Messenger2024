@@ -23,15 +23,31 @@ public class Intake extends SubsystemBase {
     }
 
     public Command turnToGroundManual() {
-        return startEnd(
-            () -> intake.turnIntake(IntakeConstants.kPivotDownSpeed),
-            () -> intake.turnIntake(0));
+        return new Command() {
+            @Override
+            public void execute() {
+                intake.setPivotSpeed(IntakeConstants.kPivotUpSpeed);
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                intake.setPivotSpeed(0);
+            }
+        };
     }
 
     public Command turnToShooterManual() {
-        return startEnd(
-            () -> intake.turnIntake(IntakeConstants.kPivotUpSpeed),
-            () -> intake.turnIntake(0));
+        return new Command() {
+            @Override
+            public void execute() {
+                intake.setPivotSpeed(IntakeConstants.kPivotDownSpeed);
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                intake.setPivotSpeed(0);
+            }
+        };
     }
 
     public Command turnToGround() {
