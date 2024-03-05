@@ -110,4 +110,9 @@ public class ShooterSparkMax implements ShooterIO {
     public double getFF() {
         return pivotController.getFF();
     }
+
+    @Override
+    public void reset() {
+        pivotEncoder.setPosition(0);
+    }
 }

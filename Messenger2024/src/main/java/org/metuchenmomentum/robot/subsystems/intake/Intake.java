@@ -1,5 +1,6 @@
 package org.metuchenmomentum.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -50,15 +51,24 @@ public class Intake extends SubsystemBase {
         };
     }
 
-    public Command turnToGround() {
-        return run(() -> intake.setPivotPosition(180));
+    public Command turnToShooter() {
+        return run(() -> intake.setPivotPosition(-0.5));
     }
 
-    public Command turnToShooter() {
-        return run(() -> intake.setPivotPosition(0));
+    public Command turnToGround() {
+        return run(() -> intake.setPivotPosition(-39));
     }
 
     public Command turnToNeutral() {
-        return run(() -> intake.setPivotPosition(90));
+        return run(() -> intake.setPivotPosition(-20));
+    }
+
+    public void resetEncoder() {
+        intake.reset();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Intake Position", Math.round(intake.getPivotPosition() * Math.pow(10, 2)) / Math.pow(10, 2));
     }
 }

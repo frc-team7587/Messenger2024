@@ -13,6 +13,8 @@ import org.metuchenmomentum.robot.Constants.IOConstants;
 import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
 import org.metuchenmomentum.robot.subsystems.intake.Intake;
 import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
+import org.metuchenmomentum.robot.subsystems.shooter.Shooter;
+import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -31,34 +33,59 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
+    private final Shooter shooter = new Shooter(new ShooterSparkMax());
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
     CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
 
     public RobotContainer() {
         configureBindings();
+
+        intake.resetEncoder();
+        shooter.resetEncoder();
     }
 
     private void configureBindings() {
-        // drivetrain.setDefaultCommand(
-        //     new RunCommand(
-        //         () -> drivetrain.drive(
-        //             -MathUtil.applyDeadband(0.5 * driverController.getLeftY(), IOConstants.kDriveDeadband),
-        //             -MathUtil.applyDeadband(0.5 * driverController.getLeftX(), IOConstants.kDriveDeadband),
-        //             -MathUtil.applyDeadband(0.5 * driverController.getRightX(), IOConstants.kDriveDeadband),
-        //             true,
-        //             true 
-        //         ), drivetrain
-        //     )
-        // );
+        drivetrain.setDefaultCommand(
+            new RunCommand(
+                () -> drivetrain.drive(
+                    -MathUtil.applyDeadband(0.5 * driverController.getLeftY(), IOConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband(0.5 * driverController.getLeftX(), IOConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband(0.5 * driverController.getRightX(), IOConstants.kDriveDeadband),
+                    true,
+                    true 
+                ), drivetrain
+            )
+        );
         
         // works
         driverController.leftBumper().whileTrue(intake.intakeNote());
         driverController.rightBumper().whileTrue(intake.releaseNote());
         
-        // needs fixing
-        driverController.y().whileTrue(intake.turnToGroundManual());
-        driverController.a().whileTrue(intake.turnToShooterManual());
+        // works
+        driverController.y().whileTrue(intake.turnToGround());
+        driverController.a().whileTrue(intake.turnToShooter());
+
+        driverController.x().whileTrue(shooter.pivotDown());
+        driverController.b().whileTrue(shooter.pivotUp());
+
+        driverController.povUp().whileTrue(shooter.turnToHandoff());
+        driverController.povRight().whileTrue(shooter.turnToAmp());
+        driverController.povDown().whileTrue(shooter.resetPosition());
+
+        driverController.rightTrigger().whileTrue(
+            shooter.prepareSpeaker()
+            .withTimeout(1.0)
+            .andThen(shooter.launchNote())
+            .handleInterrupt(() -> shooter.stop())
+        );
+
+        driverController.leftTrigger().whileTrue(
+            shooter.prepareAmplify()
+            .withTimeout(0.5)
+            .andThen(shooter.launchNote())
+            .handleInterrupt(() -> shooter.stop())
+        );
     }
 
     public Command getAutonomousCommand() {

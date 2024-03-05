@@ -97,4 +97,9 @@ public class IntakeSparkMax implements IntakeIO {
     public double getFF() {
         return pivotController.getFF();
     }
+
+    @Override
+    public void reset() {
+        pivotEncoder.setPosition(0);
+    }
 }

@@ -40,4 +40,6 @@ public interface IntakeIO {
     public double getD();
 
     public double getFF();
+
+    public void reset();
 }

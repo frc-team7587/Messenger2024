@@ -41,4 +41,6 @@ public interface ShooterIO {
     public double getD();
 
     public double getFF();
+
+    public void reset();
 }
