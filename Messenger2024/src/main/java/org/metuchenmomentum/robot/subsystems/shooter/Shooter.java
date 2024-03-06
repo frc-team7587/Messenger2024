@@ -27,12 +27,32 @@ public class Shooter extends SubsystemBase {
         );
     }
 
+    public Command clearShootingWheels() {
+        return takeBackALittleBitShooter();
+    }
+    
+    public Command takeBackALittleBitShooter() {
+        return run(() -> shooter.setShooterSpeed(-0.1));
+    }
+
+    public Command takeBackALittleBitIndexer() {
+        return run(() -> shooter.setIndexerSpeed(0.1));
+    }
+
+    public Command loadNote() {
+        return startEnd(
+            () -> shooter.setIndexerSpeed(-0.3),
+            () -> shooter.setIndexerSpeed(0)
+        );
+    }
+
     public Command amplify() {
         return new SequentialCommandGroup(
-            turnToAmp(),
-            prepareAmplify(),
+            turnToAmp().withTimeout(1),
+            prepareAmplify().withTimeout(0),
             launchNote().withTimeout(1),
-            stop(),
+            stopShooter().withTimeout(0),
+            stopIndexer().withTimeout(0),
             resetPosition()
         );
     }
@@ -70,19 +90,25 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command turnToHandoff() {
-        return run(() -> shooter.setShooterPosition(-23));
+        return run(() -> shooter.setShooterPosition(-29));
     }
 
     public Command resetPosition() {
         return run(() -> shooter.setShooterPosition(0));
     }
 
-    public Command stop() {
-        return Commands.parallel(
-            run(() -> shooter.setShooterSpeed(0)),
-            run(() -> shooter.setIndexerSpeed(0))
+    public Command stopShooter() {
+        return run(
+            () -> shooter.setShooterSpeed(0)
         );
     }
+
+     public Command stopIndexer() {
+        return run(
+            () -> shooter.setIndexerSpeed(0)
+        );
+    }
+
 
     public void resetEncoder() {
         shooter.reset();

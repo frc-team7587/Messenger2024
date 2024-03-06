@@ -2,6 +2,7 @@ package org.metuchenmomentum.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
@@ -12,11 +13,17 @@ public class Intake extends SubsystemBase {
     }
 
     public Command intakeNote() {
-        return run(
-            () -> turnToGround()
-            .andThen(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed))
-            .handleInterrupt(() -> intake.setIntakeSpeed(0))
+        return new SequentialCommandGroup(
+            turnToGround().withTimeout(0.5),
+            intakeIn()
         );
+
+    }
+
+
+    public Command intakeIn() {
+        return run(
+            () -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed));
     }
 
     public Command intakeNoteManual() {
@@ -61,6 +68,10 @@ public class Intake extends SubsystemBase {
 
     public Command turnToShooter() {
         return run(() -> intake.setPivotPosition(IntakeConstants.kIntakeShooterPosition));
+    }
+    
+    public Command stopIntake(){
+        return run(() -> intake.setIntakeSpeed(0));
     }
 
     public Command turnToGround() {

@@ -27,6 +27,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -40,9 +41,6 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
-
-        intake.resetEncoder();
-        shooter.resetEncoder();
     }
 
     private void configureBindings() {
@@ -58,8 +56,14 @@ public class RobotContainer {
             )
         );
         
-        driverController.leftBumper().whileTrue(intake.intakeNote());
-        driverController.rightBumper().whileTrue(intake.releaseNoteManual());
+        driverController.leftBumper().toggleOnTrue(intake.intakeNote());
+        driverController.leftBumper().toggleOnFalse(intake.stopIntake());
+        driverController.rightBumper().toggleOnTrue(
+           shooter.turnToHandoff()
+           .withTimeout(0)
+           .andThen(intake.turnToShooter())
+        );
+        //driverController.rightBumper().whileTrue(intake.releaseNoteManual());
         
         driverController.y().whileTrue(intake.turnToGround());
         driverController.a().whileTrue(intake.turnToShooter());
@@ -71,20 +75,22 @@ public class RobotContainer {
         driverController.povRight().whileTrue(shooter.turnToAmp());
         driverController.povDown().whileTrue(shooter.resetPosition());
 
-        driverController.rightTrigger().whileTrue(
-            shooter.prepareSpeaker()
-            .withTimeout(1.0)
-            .andThen(shooter.launchNote())
-            .handleInterrupt(() -> shooter.stop())
+        driverController.povLeft().whileTrue(new SequentialCommandGroup(
+                intake.releaseNoteManual().withTimeout(2).alongWith(shooter.loadNote()).withTimeout(2),
+                shooter.takeBackALittleBitIndexer().withTimeout(1),
+                shooter.stopIndexer(),
+                intake.stopIntake()
+            )
         );
 
-        driverController.leftTrigger().whileTrue(
+        driverController.rightTrigger().whileTrue(
             shooter.prepareSpeaker()
-            .withTimeout(0.2)
+            .withTimeout(1.5)
             .andThen(shooter.launchNote())
-            .handleInterrupt(() -> shooter.stop())
+            .handleInterrupt(() -> shooter.stopIndexer().alongWith(shooter.stopShooter()))
         );
         
+        driverController.leftTrigger().toggleOnTrue(shooter.amplify());
     }
 
     public Command getAutonomousCommand() {

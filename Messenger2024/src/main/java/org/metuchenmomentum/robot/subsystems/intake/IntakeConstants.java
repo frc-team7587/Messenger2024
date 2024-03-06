@@ -1,8 +1,8 @@
 package org.metuchenmomentum.robot.subsystems.intake;
 
 public class IntakeConstants {
-    public static final double kIntakeInSpeed = -1.0;
-    public static final double kIntakeOutSpeed = 1.0;
+    public static final double kIntakeInSpeed = 1.0;
+    public static final double kIntakeOutSpeed = -1.0;
     public static final double kPivotUpSpeed = -0.5;
     public static final double kPivotDownSpeed = 0.5;
 
