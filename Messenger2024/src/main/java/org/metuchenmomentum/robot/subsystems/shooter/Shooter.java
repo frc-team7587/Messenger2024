@@ -2,6 +2,8 @@ package org.metuchenmomentum.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -22,6 +24,16 @@ public class Shooter extends SubsystemBase {
     public Command launchNote() {
         return run(
             () -> shooter.setIndexerSpeed(ShooterConstants.kIndexerInSpeed)
+        );
+    }
+
+    public Command amplify() {
+        return new SequentialCommandGroup(
+            turnToAmp(),
+            prepareAmplify(),
+            launchNote().withTimeout(1),
+            stop(),
+            resetPosition()
         );
     }
 
@@ -65,9 +77,11 @@ public class Shooter extends SubsystemBase {
         return run(() -> shooter.setShooterPosition(0));
     }
 
-    public void stop() {
-        shooter.setShooterSpeed(0);
-        shooter.setIndexerSpeed(0);
+    public Command stop() {
+        return Commands.parallel(
+            run(() -> shooter.setShooterSpeed(0)),
+            run(() -> shooter.setIndexerSpeed(0))
+        );
     }
 
     public void resetEncoder() {

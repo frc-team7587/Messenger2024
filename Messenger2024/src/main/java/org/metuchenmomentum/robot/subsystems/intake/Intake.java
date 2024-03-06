@@ -12,12 +12,20 @@ public class Intake extends SubsystemBase {
     }
 
     public Command intakeNote() {
+        return run(
+            () -> turnToGround()
+            .andThen(() -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed))
+            .handleInterrupt(() -> intake.setIntakeSpeed(0))
+        );
+    }
+
+    public Command intakeNoteManual() {
         return startEnd(
             () -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed),
             () -> intake.setIntakeSpeed(0));
     }
 
-    public Command releaseNote() {
+    public Command releaseNoteManual() {
         return startEnd(
             () -> intake.setIntakeSpeed(IntakeConstants.kIntakeOutSpeed),
             () -> intake.setIntakeSpeed(0));
@@ -52,15 +60,15 @@ public class Intake extends SubsystemBase {
     }
 
     public Command turnToShooter() {
-        return run(() -> intake.setPivotPosition(-0.5));
+        return run(() -> intake.setPivotPosition(IntakeConstants.kIntakeShooterPosition));
     }
 
     public Command turnToGround() {
-        return run(() -> intake.setPivotPosition(-39));
+        return run(() -> intake.setPivotPosition(IntakeConstants.kIntakeGroundPosition));
     }
 
     public Command turnToNeutral() {
-        return run(() -> intake.setPivotPosition(-20));
+        return run(() -> intake.setPivotPosition(IntakeConstants.kIntakeNeutralPosition));
     }
 
     public void resetEncoder() {

@@ -35,11 +35,10 @@ public class ShooterSparkMax implements ShooterIO {
         pivotEncoder = pivot.getEncoder();
         pivotController = pivot.getPIDController();
 
-        setP(0.5);
-        setI(0.0);
-        setD(0.1);
-        setFF(0.0);
-        pivotController.setOutputRange(-1, 1);
+        setP(ShooterConstants.kP);
+        setI(ShooterConstants.kI);
+        setD(ShooterConstants.kD);
+        pivotController.setOutputRange(ShooterConstants.kMinOutput, ShooterConstants.kMaxOutput);
 
         pivot.burnFlash();
         shooter.burnFlash();
@@ -87,11 +86,6 @@ public class ShooterSparkMax implements ShooterIO {
     }
 
     @Override
-    public void setFF(double ff) {
-        pivotController.setFF(ff);
-    }
-
-    @Override
     public double getP() {
         return pivotController.getP();
     }
@@ -104,11 +98,6 @@ public class ShooterSparkMax implements ShooterIO {
     @Override
     public double getD() {
         return pivotController.getD();
-    }
-
-    @Override
-    public double getFF() {
-        return pivotController.getFF();
     }
 
     @Override

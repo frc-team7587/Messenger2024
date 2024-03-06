@@ -31,7 +31,6 @@ public class IntakeSparkMax implements IntakeIO {
         setP(IntakeConstants.kP);
         setI(IntakeConstants.kI);
         setD(IntakeConstants.kD);
-        setFF(IntakeConstants.kFF);
         pivotController.setOutputRange(IntakeConstants.kMinOutput, IntakeConstants.kMaxOutput);
 
         pivotMotor.burnFlash();
@@ -74,11 +73,6 @@ public class IntakeSparkMax implements IntakeIO {
     }
 
     @Override
-    public void setFF(double ff) {
-        pivotController.setFF(ff);
-    }
-
-    @Override
     public double getP() {
         return pivotController.getP();
     }
@@ -91,11 +85,6 @@ public class IntakeSparkMax implements IntakeIO {
     @Override
     public double getD() {
         return pivotController.getD();
-    }
-
-    @Override
-    public double getFF() {
-        return pivotController.getFF();
     }
 
     @Override

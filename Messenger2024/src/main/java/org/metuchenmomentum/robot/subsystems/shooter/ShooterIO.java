@@ -24,6 +24,7 @@ public interface ShooterIO {
      * @return The position of the shooter.
      */
     public double getShooterPosition();
+    
     public void turnShooter(double speed);
 
     public void setP(double p);
@@ -32,15 +33,11 @@ public interface ShooterIO {
 
     public void setD(double d);
 
-    public void setFF(double ff);
-
     public double getP();
 
     public double getI();
 
     public double getD();
-
-    public double getFF();
 
     public void reset();
 }

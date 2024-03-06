@@ -58,11 +58,9 @@ public class RobotContainer {
             )
         );
         
-        // works
         driverController.leftBumper().whileTrue(intake.intakeNote());
-        driverController.rightBumper().whileTrue(intake.releaseNote());
+        driverController.rightBumper().whileTrue(intake.releaseNoteManual());
         
-        // works
         driverController.y().whileTrue(intake.turnToGround());
         driverController.a().whileTrue(intake.turnToShooter());
 
@@ -81,11 +79,12 @@ public class RobotContainer {
         );
 
         driverController.leftTrigger().whileTrue(
-            shooter.prepareAmplify()
-            .withTimeout(0.5)
+            shooter.prepareSpeaker()
+            .withTimeout(0.2)
             .andThen(shooter.launchNote())
             .handleInterrupt(() -> shooter.stop())
         );
+        
     }
 
     public Command getAutonomousCommand() {
