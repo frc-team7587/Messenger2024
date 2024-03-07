@@ -56,9 +56,9 @@ public class RobotContainer {
             )
         );
         
-        driverController.a().toggleOnTrue(intake.intakeNote());
-        driverController.a().toggleOnFalse(intake.stopIntake());
-        driverController.y().toggleOnTrue(
+        operatorController.a().toggleOnTrue(intake.intakeNote());
+        operatorController.a().toggleOnFalse(intake.stopIntake());
+        operatorController.y().toggleOnTrue(
             //all handoff position
            shooter.turnToHandoff()
            .withTimeout(0)
@@ -68,7 +68,7 @@ public class RobotContainer {
         
 
 
-        driverController.rightTrigger().toggleOnTrue(
+        operatorController.rightTrigger().toggleOnTrue(
            //direct shoot
             shooter.prepareSpeaker()
             .withTimeout(1.5)
@@ -81,17 +81,17 @@ public class RobotContainer {
           //  shooter.stopShooter(),
             //intake.stopIntake()
             //));
-        driverController.b().whileTrue(shooter.pivotUp());
-        driverController.x().whileTrue(shooter.pivotDown());
+        operatorController.b().whileTrue(shooter.pivotUp());
+        operatorController.x().whileTrue(shooter.pivotDown());
 
-        driverController.povUp().whileTrue(shooter.turnToHandoff());
-        driverController.povDown().whileTrue(shooter.turnToAmp());
-        driverController.start().whileTrue(new SequentialCommandGroup(
+        operatorController.povUp().whileTrue(shooter.turnToHandoff());
+        operatorController.povDown().whileTrue(shooter.turnToAmp());
+        operatorController.start().whileTrue(new SequentialCommandGroup(
             shooter.resetPosition(),
             intake.turnToShooter()
         ));
 
-        driverController.leftBumper().toggleOnTrue(new SequentialCommandGroup(
+        operatorController.leftBumper().toggleOnTrue(new SequentialCommandGroup(
         //DoHandoff       
         //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
                 intake.releaseNoteManual().withTimeout(2).alongWith(shooter.loadNote()).withTimeout(2),
@@ -101,7 +101,7 @@ public class RobotContainer {
             )
         );
 
-        driverController.rightBumper().toggleOnTrue(
+        operatorController.rightBumper().toggleOnTrue(
             shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter())
             //manualShoot
             //shooter.prepareSpeaker()
@@ -109,12 +109,12 @@ public class RobotContainer {
           //  .andThen(shooter.launchNote())
         //    .handleInterrupt(() -> shooter.stopIndexer().alongWith(shooter.stopShooter()))
         );
-        driverController.rightBumper().toggleOnFalse(new SequentialCommandGroup(
+        operatorController.rightBumper().toggleOnFalse(new SequentialCommandGroup(
         shooter.stopIndexer(),
         shooter.stopShooter()
         ));
         
-        driverController.leftTrigger().toggleOnTrue(shooter.amplify());
+        operatorController.leftTrigger().toggleOnTrue(shooter.amplify());
     }
 
     public Command getAutonomousCommand() {
