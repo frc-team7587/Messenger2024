@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
 
     public Command intakeNote() {
         return new SequentialCommandGroup(
-            turnToGround().withTimeout(0.5),
+            turnToGround().withTimeout(0),
             intakeIn()
         );
 
