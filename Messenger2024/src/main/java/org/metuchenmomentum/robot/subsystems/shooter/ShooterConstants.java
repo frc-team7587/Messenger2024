@@ -11,7 +11,7 @@ public class ShooterConstants {
     public static final double kShooterPivotUpSpeed = -0.1;
 
     public static final double kNeutralPosition = 0;
-    public static final double kHandoffPosition = 45;
+    public static final double kHandoffPosition = 16;
     public static final double kAmpPosition = 135;
 
     public static final int kShootingMotorID = 11;

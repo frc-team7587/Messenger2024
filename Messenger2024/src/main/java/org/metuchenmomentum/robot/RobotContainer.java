@@ -67,17 +67,18 @@ public class RobotContainer {
         
 
 
-        driverController.start().toggleOnTrue(new SequentialCommandGroup(
+        driverController.start().toggleOnTrue(
            //direct shoot
             shooter.prepareSpeaker()
             .withTimeout(1.5)
-            .andThen(shooter.launchNote().alongWith(intake.intakeOut()))
-            ));
-        driverController.start().toggleOnFalse(new SequentialCommandGroup(
-            shooter.stopIndexer(),
-            shooter.stopShooter(),
-            intake.stopIntake()
-            ));
+            .andThen(shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1).andThen(shooter.stopShooter().withTimeout(.1)))
+            .andThen(intake.stopIntake().alongWith(shooter.stopIndexer()))
+            );
+      //  driverController.start().toggleOnFalse(new SequentialCommandGroup(
+        //    shooter.stopIndexer(),
+          //  shooter.stopShooter(),
+            //intake.stopIntake()
+            //));
         driverController.b().whileTrue(shooter.pivotUp());
         driverController.x().whileTrue(shooter.pivotDown());
 
@@ -86,7 +87,8 @@ public class RobotContainer {
         driverController.povDown().whileTrue(shooter.resetPosition());
 
         driverController.povLeft().toggleOnTrue(new SequentialCommandGroup(
-                //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
+        //DoHandoff       
+        //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
                 intake.releaseNoteManual().withTimeout(2).alongWith(shooter.loadNote()).withTimeout(2),
                 shooter.takeBackALittleBitIndexer().withTimeout(.1),
                 shooter.stopIndexer(),
@@ -94,12 +96,18 @@ public class RobotContainer {
             )
         );
 
-        driverController.rightTrigger().whileTrue(
-            shooter.prepareSpeaker()
-            .withTimeout(1.5)
-            .andThen(shooter.launchNote())
-            .handleInterrupt(() -> shooter.stopIndexer().alongWith(shooter.stopShooter()))
+        driverController.rightTrigger().toggleOnTrue(
+            shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter())
+            //manualShoot
+            //shooter.prepareSpeaker()
+           // .withTimeout(1.5)
+          //  .andThen(shooter.launchNote())
+        //    .handleInterrupt(() -> shooter.stopIndexer().alongWith(shooter.stopShooter()))
         );
+        driverController.rightTrigger().toggleOnFalse(new SequentialCommandGroup(
+        shooter.stopIndexer(),
+        shooter.stopShooter()
+        ));
         
         driverController.leftTrigger().toggleOnTrue(shooter.amplify());
     }

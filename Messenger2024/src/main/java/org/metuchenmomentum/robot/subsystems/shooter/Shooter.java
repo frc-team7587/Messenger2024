@@ -26,7 +26,13 @@ public class Shooter extends SubsystemBase {
             () -> shooter.setIndexerSpeed(ShooterConstants.kIndexerInSpeed)
         );
     }
-
+    public Command manualShoot() {
+        return new SequentialCommandGroup(
+             prepareSpeaker()
+            .withTimeout(1.5)
+            .andThen(launchNote().withTimeout(1))   
+        );
+    }
     public Command clearShootingWheels() {
         return takeBackALittleBitShooter();
     }
@@ -91,7 +97,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command turnToHandoff() {
-        return run(() -> shooter.setShooterPosition(-28));
+        return run(() -> shooter.setShooterPosition(-16));
     }
 
     public Command resetPosition() {
