@@ -33,6 +33,7 @@ public class Shooter extends SubsystemBase {
     
     public Command takeBackALittleBitShooter() {
         return run(() -> shooter.setShooterSpeed(-0.1));
+   
     }
 
     public Command takeBackALittleBitIndexer() {
@@ -90,7 +91,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command turnToHandoff() {
-        return run(() -> shooter.setShooterPosition(-29));
+        return run(() -> shooter.setShooterPosition(-28));
     }
 
     public Command resetPosition() {

@@ -25,6 +25,10 @@ public class Intake extends SubsystemBase {
         return run(
             () -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed));
     }
+    public Command intakeOut() {
+        return run(
+            () -> intake.setIntakeSpeed(-IntakeConstants.kIntakeInSpeed));
+    }
 
     public Command intakeNoteManual() {
         return startEnd(

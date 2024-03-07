@@ -56,28 +56,39 @@ public class RobotContainer {
             )
         );
         
-        driverController.leftBumper().toggleOnTrue(intake.intakeNote());
-        driverController.leftBumper().toggleOnFalse(intake.stopIntake());
-        driverController.rightBumper().toggleOnTrue(
+        driverController.a().toggleOnTrue(intake.intakeNote());
+        driverController.a().toggleOnFalse(intake.stopIntake());
+        driverController.y().toggleOnTrue(
            shooter.turnToHandoff()
            .withTimeout(0)
            .andThen(intake.turnToShooter())
         );
         //driverController.rightBumper().whileTrue(intake.releaseNoteManual());
         
-        driverController.y().whileTrue(intake.turnToGround());
-        driverController.a().whileTrue(intake.turnToShooter());
 
-        driverController.x().whileTrue(shooter.pivotDown());
+
+        driverController.start().toggleOnTrue(new SequentialCommandGroup(
+           //direct shoot
+            shooter.prepareSpeaker()
+            .withTimeout(1.5)
+            .andThen(shooter.launchNote().alongWith(intake.intakeOut()))
+            ));
+        driverController.start().toggleOnFalse(new SequentialCommandGroup(
+            shooter.stopIndexer(),
+            shooter.stopShooter(),
+            intake.stopIntake()
+            ));
         driverController.b().whileTrue(shooter.pivotUp());
+        driverController.x().whileTrue(shooter.pivotDown());
 
         driverController.povUp().whileTrue(shooter.turnToHandoff());
         driverController.povRight().whileTrue(shooter.turnToAmp());
         driverController.povDown().whileTrue(shooter.resetPosition());
 
-        driverController.povLeft().whileTrue(new SequentialCommandGroup(
+        driverController.povLeft().toggleOnTrue(new SequentialCommandGroup(
+                //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
                 intake.releaseNoteManual().withTimeout(2).alongWith(shooter.loadNote()).withTimeout(2),
-                shooter.takeBackALittleBitIndexer().withTimeout(1),
+                shooter.takeBackALittleBitIndexer().withTimeout(.1),
                 shooter.stopIndexer(),
                 intake.stopIntake()
             )
