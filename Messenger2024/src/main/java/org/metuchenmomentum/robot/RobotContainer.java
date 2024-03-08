@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+
 public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
@@ -56,11 +57,16 @@ public class RobotContainer {
             )
         );
         
-        operatorController.a().toggleOnTrue(intake.intakeNote());
-        operatorController.a().toggleOnFalse(intake.stopIntake());
+        
+            
+        
+            
+        //main set of commands, get disabled if d-pad left
+        operatorController.povLeft().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
+        operatorController.povLeft().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
         // Sets handoff position
-        operatorController.y().toggleOnTrue(
+        operatorController.povLeft().negate().and(operatorController.y()).toggleOnTrue(
            shooter.turnToHandoff()
            .withTimeout(0)
            .andThen(intake.turnToShooter())
@@ -68,7 +74,7 @@ public class RobotContainer {
         //driverController.rightBumper().whileTrue(intake.releaseNoteManual());
         
         // Shooting from intake
-        operatorController.rightTrigger().toggleOnTrue(
+        operatorController.povLeft().negate().and(operatorController.rightTrigger()).toggleOnTrue(
             //direct shoot
             shooter.prepareSpeakerPosition().withTimeout(.3)
                 .andThen(shooter.prepareSpeaker()
@@ -84,14 +90,13 @@ public class RobotContainer {
           //  shooter.stopShooter(),
             //intake.stopIntake()
             //));
-        operatorController.b().whileTrue(shooter.pivotUp());
-        operatorController.x().whileTrue(shooter.pivotDown());
+       
 
-        operatorController.povUp().whileTrue(shooter.turnToHandoff());
-        operatorController.povDown().whileTrue(shooter.turnToAmp());
+        operatorController.povLeft().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
+        operatorController.povLeft().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
 
         // Reset positions
-        operatorController.start().whileTrue(
+        operatorController.povLeft().negate().and(operatorController.start()).whileTrue(
             new SequentialCommandGroup(
                 shooter.resetPosition().withTimeout(0),
                 intake.turnToShooter()
@@ -99,7 +104,7 @@ public class RobotContainer {
         );
 
         // Handoff from intake to shooter
-        operatorController.leftBumper().toggleOnTrue(
+        operatorController.povLeft().negate().and(operatorController.leftBumper()).toggleOnTrue(
             new SequentialCommandGroup(      
         //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
                 intake.releaseNoteManual().withTimeout(2)
@@ -112,7 +117,7 @@ public class RobotContainer {
         );
 
         // Manual Shoot
-        operatorController.rightBumper().toggleOnTrue(
+        operatorController.povLeft().negate().and(operatorController.rightBumper()).toggleOnTrue(
             shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter().withTimeout(0)).andThen(shooter.stopIndexer())
             //manualShoot
             //shooter.prepareSpeaker()
@@ -126,9 +131,21 @@ public class RobotContainer {
             
      //  );
         
-        operatorController.leftTrigger().toggleOnTrue(shooter.amplify());
-    }
-
+        operatorController.povLeft().negate().and(operatorController.leftTrigger()).toggleOnTrue(shooter.amplify());
+    
+        //safe mode commands
+        operatorController.povLeft().and(operatorController.b()).whileTrue(shooter.pivotUp());
+        operatorController.povLeft().and(operatorController.x()).whileTrue(shooter.pivotDown());
+        operatorController.povLeft().and(operatorController.y()).whileTrue(intake.turnToGroundManual());
+        operatorController.povLeft().and(operatorController.a()).whileTrue(intake.turnToShooterManual());
+        operatorController.povLeft().and(operatorController.leftTrigger()).whileTrue(intake.intakeIn());
+        operatorController.povLeft().and(operatorController.rightTrigger()).whileTrue(intake.intakeOut());
+        operatorController.povLeft().and(operatorController.leftBumper()).whileTrue(shooter.prepareSpeaker());
+        operatorController.povLeft().and(operatorController.rightBumper()).whileTrue(shooter.takeBackALittleBitShooter());
+        operatorController.povLeft().and(operatorController.povUp()).whileTrue(shooter.loadNote());
+        operatorController.povLeft().and(operatorController.povDown()).whileTrue(shooter.takeBackALittleBitIndexer());
+    }   
+    
     public Command getAutonomousCommand() {
         // Create config for trajectory
         TrajectoryConfig config = new TrajectoryConfig(
