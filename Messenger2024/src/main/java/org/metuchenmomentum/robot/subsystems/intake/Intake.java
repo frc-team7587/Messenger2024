@@ -20,28 +20,33 @@ public class Intake extends SubsystemBase {
 
     }
 
-
+    // runs the intake
     public Command intakeIn() {
         return run(
             () -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed));
     }
+
+    // runs intake in opposite direction
     public Command intakeOut() {
         return run(
             () -> intake.setIntakeSpeed(-IntakeConstants.kIntakeInSpeed));
     }
 
+    // runs the intake, stops when command is no longer called
     public Command intakeNoteManual() {
         return startEnd(
             () -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed),
             () -> intake.setIntakeSpeed(0));
     }
 
+    // runs the intake in opposite direction, stops when command is no longer called
     public Command releaseNoteManual() {
         return startEnd(
             () -> intake.setIntakeSpeed(IntakeConstants.kIntakeOutSpeed),
             () -> intake.setIntakeSpeed(0));
     }
 
+    // turns the intake towards the ground while command is called
     public Command turnToGroundManual() {
         return new Command() {
             @Override
@@ -56,6 +61,7 @@ public class Intake extends SubsystemBase {
         };
     }
 
+    // turns the intake towards the shooter while command is called
     public Command turnToShooterManual() {
         return new Command() {
             @Override
@@ -69,25 +75,29 @@ public class Intake extends SubsystemBase {
             }
         };
     }
-
+    
+    // turns the intake towards the shooter angle
     public Command turnToShooter() {
         return run(() -> intake.setPivotPosition(IntakeConstants.kIntakeShooterPosition));
     }
     
-    public Command stopIntake(){
-        return run(() -> intake.setIntakeSpeed(0));
-    }
-
+    // turns the intake towards the ground angle
     public Command turnToGround() {
         return run(() -> intake.setPivotPosition(IntakeConstants.kIntakeGroundPosition));
     }
 
+    // turns the intake towards the neutral angle to allow handoff
     public Command turnToNeutral() {
         return run(() -> intake.setPivotPosition(IntakeConstants.kIntakeNeutralPosition));
     }
 
     public void resetEncoder() {
         intake.reset();
+    }
+
+    // stops the intake wheels
+    public Command stopIntake(){
+        return run(() -> intake.setIntakeSpeed(0));
     }
 
     @Override
