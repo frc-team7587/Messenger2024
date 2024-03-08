@@ -20,7 +20,6 @@ public class Intake extends SubsystemBase {
 
     }
 
-
     public Command intakeIn() {
         return run(
             () -> intake.setIntakeSpeed(IntakeConstants.kIntakeInSpeed));

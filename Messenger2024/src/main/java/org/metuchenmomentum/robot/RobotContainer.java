@@ -58,24 +58,27 @@ public class RobotContainer {
         
         operatorController.a().toggleOnTrue(intake.intakeNote());
         operatorController.a().toggleOnFalse(intake.stopIntake());
+
+        // Sets handoff position
         operatorController.y().toggleOnTrue(
-            //all handoff position
            shooter.turnToHandoff()
            .withTimeout(0)
            .andThen(intake.turnToShooter())
         );
         //driverController.rightBumper().whileTrue(intake.releaseNoteManual());
         
-
-
+        // Shooting from intake
         operatorController.rightTrigger().toggleOnTrue(
-           //direct shoot
-            shooter.prepareSpeaker()
-            .withTimeout(1.5)
-            .andThen(shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1).andThen(shooter.stopShooter().withTimeout(.1)))
+            //direct shoot
+            shooter.prepareSpeakerPosition().withTimeout(.3)
+                .andThen(shooter.prepareSpeaker()
+                .withTimeout(1.5))
+                .andThen(shooter.launchNote()
+                .alongWith(intake.intakeOut()).withTimeout(1)
+                .andThen(shooter.stopShooter().withTimeout(.1)))
            //literally the only way to get things to stop
-            .andThen(intake.stopIntake().alongWith(shooter.stopIndexer()))
-            );
+                .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()))
+        );
       //  driverController.start().toggleOnFalse(new SequentialCommandGroup(
         //    shooter.stopIndexer(),
           //  shooter.stopShooter(),
@@ -86,33 +89,42 @@ public class RobotContainer {
 
         operatorController.povUp().whileTrue(shooter.turnToHandoff());
         operatorController.povDown().whileTrue(shooter.turnToAmp());
-        operatorController.start().whileTrue(new SequentialCommandGroup(
-            shooter.resetPosition(),
-            intake.turnToShooter()
-        ));
 
-        operatorController.leftBumper().toggleOnTrue(new SequentialCommandGroup(
-        //DoHandoff       
+        // Reset positions
+        operatorController.start().whileTrue(
+            new SequentialCommandGroup(
+                shooter.resetPosition().withTimeout(0),
+                intake.turnToShooter()
+            )
+        );
+
+        // Handoff from intake to shooter
+        operatorController.leftBumper().toggleOnTrue(
+            new SequentialCommandGroup(      
         //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
-                intake.releaseNoteManual().withTimeout(2).alongWith(shooter.loadNote()).withTimeout(2),
+                intake.releaseNoteManual().withTimeout(2)
+                .alongWith(shooter.loadNote()).withTimeout(2),
+                intake.turnToNeutral().withTimeout(.1),
                 shooter.takeBackALittleBitIndexer().withTimeout(.1),
                 shooter.stopIndexer(),
                 intake.stopIntake()
             )
         );
 
+        // Manual Shoot
         operatorController.rightBumper().toggleOnTrue(
-            shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter())
+            shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter().withTimeout(0)).andThen(shooter.stopIndexer())
             //manualShoot
             //shooter.prepareSpeaker()
            // .withTimeout(1.5)
           //  .andThen(shooter.launchNote())
         //    .handleInterrupt(() -> shooter.stopIndexer().alongWith(shooter.stopShooter()))
         );
-        operatorController.rightBumper().toggleOnFalse(new SequentialCommandGroup(
-        shooter.stopIndexer(),
-        shooter.stopShooter()
-        ));
+
+        //operatorController.rightBumper().toggleOnFalse(
+          //      shooter.stopIndexer().withTimeout(0).andThen(shooter.stopShooter())
+            
+     //  );
         
         operatorController.leftTrigger().toggleOnTrue(shooter.amplify());
     }
