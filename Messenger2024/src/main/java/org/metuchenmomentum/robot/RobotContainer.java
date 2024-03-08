@@ -62,19 +62,19 @@ public class RobotContainer {
         
             
         //main set of commands, get disabled if d-pad left
-        operatorController.povLeft().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
-        operatorController.povLeft().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
+        operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
+        operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
         // Sets handoff position
-        operatorController.povLeft().negate().and(operatorController.y()).toggleOnTrue(
+        operatorController.start().negate().and(operatorController.y()).toggleOnTrue(
            shooter.turnToHandoff()
            .withTimeout(0)
            .andThen(intake.turnToShooter())
         );
-        //driverController.rightBumper().whileTrue(intake.releaseNoteManual());
+
         
         // Shooting from intake
-        operatorController.povLeft().negate().and(operatorController.rightTrigger()).toggleOnTrue(
+        operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
             //direct shoot
             shooter.prepareSpeakerPosition().withTimeout(.3)
                 .andThen(shooter.prepareSpeaker()
@@ -85,18 +85,14 @@ public class RobotContainer {
            //literally the only way to get things to stop
                 .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()))
         );
-      //  driverController.start().toggleOnFalse(new SequentialCommandGroup(
-        //    shooter.stopIndexer(),
-          //  shooter.stopShooter(),
-            //intake.stopIntake()
-            //));
+
        
 
-        operatorController.povLeft().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
-        operatorController.povLeft().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
+        operatorController.start().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
+        operatorController.start().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
 
         // Reset positions
-        operatorController.povLeft().negate().and(operatorController.start()).whileTrue(
+        operatorController.start().negate().and(operatorController.x()).whileTrue(
             new SequentialCommandGroup(
                 shooter.resetPosition().withTimeout(0),
                 intake.turnToShooter()
@@ -104,7 +100,7 @@ public class RobotContainer {
         );
 
         // Handoff from intake to shooter
-        operatorController.povLeft().negate().and(operatorController.leftBumper()).toggleOnTrue(
+        operatorController.start().negate().and(operatorController.leftBumper()).toggleOnTrue(
             new SequentialCommandGroup(      
         //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
                 intake.releaseNoteManual().withTimeout(2)
@@ -117,33 +113,32 @@ public class RobotContainer {
         );
 
         // Manual Shoot
-        operatorController.povLeft().negate().and(operatorController.rightBumper()).toggleOnTrue(
+        operatorController.start().negate().and(operatorController.rightBumper()).toggleOnTrue(
             shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter().withTimeout(0)).andThen(shooter.stopIndexer())
-            //manualShoot
-            //shooter.prepareSpeaker()
-           // .withTimeout(1.5)
-          //  .andThen(shooter.launchNote())
-        //    .handleInterrupt(() -> shooter.stopIndexer().alongWith(shooter.stopShooter()))
+           
         );
 
-        //operatorController.rightBumper().toggleOnFalse(
-          //      shooter.stopIndexer().withTimeout(0).andThen(shooter.stopShooter())
-            
-     //  );
-        
-        operatorController.povLeft().negate().and(operatorController.leftTrigger()).toggleOnTrue(shooter.amplify());
+
+        operatorController.start().negate().and(operatorController.leftTrigger()).toggleOnTrue(shooter.amplify());
     
         //safe mode commands
-        operatorController.povLeft().and(operatorController.b()).whileTrue(shooter.pivotUp());
-        operatorController.povLeft().and(operatorController.x()).whileTrue(shooter.pivotDown());
-        operatorController.povLeft().and(operatorController.y()).whileTrue(intake.turnToGroundManual());
-        operatorController.povLeft().and(operatorController.a()).whileTrue(intake.turnToShooterManual());
-        operatorController.povLeft().and(operatorController.leftTrigger()).whileTrue(intake.intakeIn());
-        operatorController.povLeft().and(operatorController.rightTrigger()).whileTrue(intake.intakeOut());
-        operatorController.povLeft().and(operatorController.leftBumper()).whileTrue(shooter.prepareSpeaker());
-        operatorController.povLeft().and(operatorController.rightBumper()).whileTrue(shooter.takeBackALittleBitShooter());
-        operatorController.povLeft().and(operatorController.povUp()).whileTrue(shooter.loadNote());
-        operatorController.povLeft().and(operatorController.povDown()).whileTrue(shooter.takeBackALittleBitIndexer());
+        operatorController.start().and(operatorController.b()).whileTrue(shooter.pivotUp());
+        operatorController.start().and(operatorController.x()).whileTrue(shooter.pivotDown());
+        operatorController.start().and(operatorController.y()).whileTrue(intake.turnToGroundManual());
+        operatorController.start().and(operatorController.a()).whileTrue(intake.turnToShooterManual());
+        operatorController.start().and(operatorController.leftTrigger()).toggleOnTrue(intake.intakeIn());
+        operatorController.start().and(operatorController.leftTrigger()).toggleOnFalse(intake.stopIntake());
+        operatorController.start().and(operatorController.rightTrigger()).toggleOnTrue(intake.intakeOut());
+        operatorController.start().and(operatorController.rightTrigger()).toggleOnFalse(intake.stopIntake());
+        operatorController.start().and(operatorController.leftBumper()).toggleOnTrue(shooter.prepareSpeaker());
+        operatorController.start().and(operatorController.leftBumper()).toggleOnFalse(shooter.stopShooter());
+        operatorController.start().and(operatorController.rightBumper()).toggleOnTrue(shooter.takeBackALittleBitShooter());
+        operatorController.start().and(operatorController.rightBumper()).toggleOnFalse(shooter.stopShooter());
+        operatorController.start().and(operatorController.povUp()).toggleOnTrue(shooter.loadNote());
+        operatorController.start().and(operatorController.povUp()).toggleOnFalse(shooter.stopIndexer());
+        operatorController.start().and(operatorController.povDown()).toggleOnTrue(shooter.takeBackALittleBitIndexer());
+        operatorController.start().and(operatorController.povDown()).toggleOnFalse(shooter.stopIndexer());
+    
     }   
     
     public Command getAutonomousCommand() {
