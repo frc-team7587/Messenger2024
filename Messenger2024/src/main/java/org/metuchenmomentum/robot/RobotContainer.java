@@ -57,34 +57,34 @@ public class RobotContainer {
             )
         );
         
-        //main set of commands, get disabled if d-pad left
+        /** TELEOPERATED TRIGGERS */
+
+        // Clicking A turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
-        // Sets handoff position
+        // Clicking Y sets the intake the shooter to the handoff position
         operatorController.start().negate().and(operatorController.y()).toggleOnTrue(
-           shooter.turnToHandoff()
-           .withTimeout(0)
-           .andThen(intake.turnToShooter())
+            shooter.turnToHandoff()
+                .withTimeout(0)
+                .andThen(intake.turnToShooter())
         );
 
-        // Shooting from intake
+        // The right trigger shoots the note to the speaker
         operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
-            //direct shoot
             shooter.prepareSpeakerPosition().withTimeout(.3)
-                .andThen(shooter.prepareSpeaker()
-                .withTimeout(1.5))
+                .andThen(shooter.prepareSpeaker().withTimeout(1.5))
                 .andThen(shooter.launchNote()
                 .alongWith(intake.intakeOut()).withTimeout(1)
                 .andThen(shooter.stopShooter().withTimeout(.1)))
-           //literally the only way to get things to stop
                 .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()))
         );
 
+        // The POV-Up and POV-Down buttons turn the shooter to the handoff and amp positions, respectively
         operatorController.start().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
         operatorController.start().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
 
-        // Reset positions
+        // The X button resets the position
         operatorController.start().negate().and(operatorController.x()).whileTrue(
             new SequentialCommandGroup(
                 shooter.resetPosition().withTimeout(0),
@@ -92,10 +92,9 @@ public class RobotContainer {
             )
         );
 
-        // Handoff from intake to shooter
+        // The Left Bumper button loads the note in the shooter so the notes doesn't touch the shooter wheels
         operatorController.start().negate().and(operatorController.leftBumper()).toggleOnTrue(
             new SequentialCommandGroup(      
-        //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
                 intake.releaseNoteManual().withTimeout(2)
                 .alongWith(shooter.loadNote()).withTimeout(2),
                 intake.turnToNeutral().withTimeout(.1),
@@ -105,14 +104,14 @@ public class RobotContainer {
             )
         );
 
-        // Manual Shoot
+        // The Right Bumper button shoots the note at the current position
         operatorController.start().negate().and(operatorController.rightBumper()).toggleOnTrue(
             shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter().withTimeout(0)).andThen(shooter.stopIndexer())
         );
-        
+        // The Left Trigger button 
         operatorController.start().negate().and(operatorController.leftTrigger()).toggleOnTrue(shooter.amplify());
     
-        //safe mode commands
+        // Full-Manual Mode enabled by holding the start button, commands are self-explanatory
         operatorController.start().and(operatorController.b()).whileTrue(shooter.pivotUp());
         operatorController.start().and(operatorController.x()).whileTrue(shooter.pivotDown());
         operatorController.start().and(operatorController.y()).whileTrue(intake.turnToGroundManual());
