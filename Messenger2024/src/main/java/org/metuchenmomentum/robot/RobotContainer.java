@@ -57,10 +57,6 @@ public class RobotContainer {
             )
         );
         
-        
-            
-        
-            
         //main set of commands, get disabled if d-pad left
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
@@ -72,7 +68,6 @@ public class RobotContainer {
            .andThen(intake.turnToShooter())
         );
 
-        
         // Shooting from intake
         operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
             //direct shoot
@@ -85,8 +80,6 @@ public class RobotContainer {
            //literally the only way to get things to stop
                 .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()))
         );
-
-       
 
         operatorController.start().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
         operatorController.start().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
@@ -115,10 +108,8 @@ public class RobotContainer {
         // Manual Shoot
         operatorController.start().negate().and(operatorController.rightBumper()).toggleOnTrue(
             shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter().withTimeout(0)).andThen(shooter.stopIndexer())
-           
         );
-
-
+        
         operatorController.start().negate().and(operatorController.leftTrigger()).toggleOnTrue(shooter.amplify());
     
         //safe mode commands
