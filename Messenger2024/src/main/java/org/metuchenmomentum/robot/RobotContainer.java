@@ -15,6 +15,7 @@ import org.metuchenmomentum.robot.subsystems.intake.Intake;
 import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
 import org.metuchenmomentum.robot.subsystems.shooter.Shooter;
 import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
+import org.metuchenmomentum.robot.subsystems.vision.Vision;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -36,6 +37,7 @@ public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
     private final Shooter shooter = new Shooter(new ShooterSparkMax());
+    private final Vision vision = new Vision();
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
     CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
@@ -59,18 +61,18 @@ public class RobotContainer {
         
         /** TELEOPERATED TRIGGERS */
 
-        // Clicking A turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
+        // A: turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
-        // Clicking Y sets the intake the shooter to the handoff position
+        // Y:  sets the intake the shooter to the handoff position
         operatorController.start().negate().and(operatorController.y()).toggleOnTrue(
             shooter.turnToHandoff()
                 .withTimeout(0)
                 .andThen(intake.turnToShooter())
         );
 
-        // The right trigger shoots the note to the speaker
+        // TRight Trigger: starts the speaker scoring sequence
         operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
             shooter.prepareSpeakerPosition().withTimeout(.3)
                 .andThen(shooter.prepareSpeaker().withTimeout(1.5))
@@ -80,11 +82,11 @@ public class RobotContainer {
                 .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()))
         );
 
-        // The POV-Up and POV-Down buttons turn the shooter to the handoff and amp positions, respectively
+        // POV-Up and POV-Down buttons turn the shooter to the handoff and amp positions respectively
         operatorController.start().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
         operatorController.start().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
 
-        // The X button resets the position
+        // X: resets the position
         operatorController.start().negate().and(operatorController.x()).whileTrue(
             new SequentialCommandGroup(
                 shooter.resetPosition().withTimeout(0),
@@ -92,7 +94,7 @@ public class RobotContainer {
             )
         );
 
-        // The Left Bumper button loads the note in the shooter so the notes doesn't touch the shooter wheels
+        // Left Bumper: button loads the note in the shooter so the notes doesn't touch the shooter wheels
         operatorController.start().negate().and(operatorController.leftBumper()).toggleOnTrue(
             new SequentialCommandGroup(      
                 intake.releaseNoteManual().withTimeout(2)
@@ -104,30 +106,62 @@ public class RobotContainer {
             )
         );
 
-        // The Right Bumper button shoots the note at the current position
+        // Right Bumper: button shoots the note at the current position
         operatorController.start().negate().and(operatorController.rightBumper()).toggleOnTrue(
             shooter.manualShoot().withTimeout(2).andThen(shooter.stopShooter().withTimeout(0)).andThen(shooter.stopIndexer())
         );
-        // The Left Trigger button 
+
+        // Left Trigger: starts the amp scoring sequence
         operatorController.start().negate().and(operatorController.leftTrigger()).toggleOnTrue(shooter.amplify());
     
-        // Full-Manual Mode enabled by holding the start button, commands are self-explanatory
-        operatorController.start().and(operatorController.b()).whileTrue(shooter.pivotUp());
-        operatorController.start().and(operatorController.x()).whileTrue(shooter.pivotDown());
-        operatorController.start().and(operatorController.y()).whileTrue(intake.turnToGroundManual());
-        operatorController.start().and(operatorController.a()).whileTrue(intake.turnToShooterManual());
-        operatorController.start().and(operatorController.leftTrigger()).toggleOnTrue(intake.intakeIn());
-        operatorController.start().and(operatorController.leftTrigger()).toggleOnFalse(intake.stopIntake());
-        operatorController.start().and(operatorController.rightTrigger()).toggleOnTrue(intake.intakeOut());
-        operatorController.start().and(operatorController.rightTrigger()).toggleOnFalse(intake.stopIntake());
-        operatorController.start().and(operatorController.leftBumper()).toggleOnTrue(shooter.prepareSpeaker());
-        operatorController.start().and(operatorController.leftBumper()).toggleOnFalse(shooter.stopShooter());
-        operatorController.start().and(operatorController.rightBumper()).toggleOnTrue(shooter.takeBackALittleBitShooter());
-        operatorController.start().and(operatorController.rightBumper()).toggleOnFalse(shooter.stopShooter());
-        operatorController.start().and(operatorController.povUp()).toggleOnTrue(shooter.loadNote());
-        operatorController.start().and(operatorController.povUp()).toggleOnFalse(shooter.stopIndexer());
-        operatorController.start().and(operatorController.povDown()).toggleOnTrue(shooter.takeBackALittleBitIndexer());
-        operatorController.start().and(operatorController.povDown()).toggleOnFalse(shooter.stopIndexer());
+        /** Full-Manual Mode enabled by holding the start button, commands are self-explanatory */
+        operatorController.start().and(operatorController.b())
+            .whileTrue(shooter.pivotUp());
+
+        operatorController.start().and(operatorController.x())
+            .whileTrue(shooter.pivotDown());
+
+        operatorController.start().and(operatorController.y())
+            .whileTrue(intake.turnToGroundManual());
+
+        operatorController.start().and(operatorController.a())
+            .whileTrue(intake.turnToShooterManual());
+
+        operatorController.start().and(operatorController.leftTrigger())
+            .toggleOnTrue(intake.intakeIn());
+
+        operatorController.start().and(operatorController.leftTrigger())
+            .toggleOnFalse(intake.stopIntake());
+
+        operatorController.start().and(operatorController.rightTrigger())
+            .toggleOnTrue(intake.intakeOut());
+
+        operatorController.start().and(operatorController.rightTrigger())
+            .toggleOnFalse(intake.stopIntake());
+
+        operatorController.start().and(operatorController.leftBumper())
+            .toggleOnTrue(shooter.prepareSpeaker());
+
+        operatorController.start().and(operatorController.leftBumper())
+            .toggleOnFalse(shooter.stopShooter());
+
+        operatorController.start().and(operatorController.rightBumper())
+            .toggleOnTrue(shooter.takeBackALittleBitShooter());
+
+        operatorController.start().and(operatorController.rightBumper())
+            .toggleOnFalse(shooter.stopShooter());
+
+        operatorController.start().and(operatorController.povUp())
+            .toggleOnTrue(shooter.loadNote());
+
+        operatorController.start().and(operatorController.povUp())
+            .toggleOnFalse(shooter.stopIndexer());
+
+        operatorController.start().and(operatorController.povDown())
+            .toggleOnTrue(shooter.takeBackALittleBitIndexer());
+
+        operatorController.start().and(operatorController.povDown())
+            .toggleOnFalse(shooter.stopIndexer());
     
     }   
     
