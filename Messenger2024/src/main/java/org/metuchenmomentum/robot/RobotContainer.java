@@ -45,24 +45,24 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        // Drive Command
+        // The right trigger acts a brake so the max speed is inversely proportional to how much
+        // the right trigger is held down. When it's held down completely, 
         drivetrain.setDefaultCommand(
             new RunCommand(
                 () -> drivetrain.drive(
-                    -MathUtil.applyDeadband(0.5 * driverController.getLeftY(), IOConstants.kDriveDeadband),
-                    -MathUtil.applyDeadband(0.5 * driverController.getLeftX(), IOConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband((1 - 0.75 * driverController.getRightTriggerAxis()) * driverController.getLeftY(), IOConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband((1 - 0.75 * driverController.getRightTriggerAxis()) * driverController.getLeftX(), IOConstants.kDriveDeadband),
                     -MathUtil.applyDeadband(0.5 * driverController.getRightX(), IOConstants.kDriveDeadband),
                     true,
                     true 
                 ), drivetrain
             )
-        );
-        
-        
-            
+        );  
         
             
         //main set of commands, get disabled if d-pad left
-        operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
+        operatorController.start().negate().and(operatorController.a()).toggleOnTrue(shooter.stopIndexer().alongWith(intake.intakeNote()));
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
         // Sets handoff position
@@ -76,7 +76,7 @@ public class RobotContainer {
         // Shooting from intake
         operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
             //direct shoot
-            shooter.prepareSpeakerPosition().withTimeout(.3)
+                shooter.prepareSpeakerPosition().withTimeout(.3)
                 .andThen(shooter.prepareSpeaker()
                 .withTimeout(1.5))
                 .andThen(shooter.launchNote()
@@ -103,10 +103,10 @@ public class RobotContainer {
         operatorController.start().negate().and(operatorController.leftBumper()).toggleOnTrue(
             new SequentialCommandGroup(      
         //shooter.turnToHandoff().withTimeout(1).andThen(intake.turnToShooter().withTimeout(1)),
-                intake.releaseNoteManual().withTimeout(2)
-                .alongWith(shooter.loadNote()).withTimeout(2),
+                intake.releaseNoteManual().withTimeout(2.2)
+                .alongWith(shooter.loadNote()).withTimeout(2.2),
                 intake.turnToNeutral().withTimeout(.1),
-                shooter.takeBackALittleBitIndexer().withTimeout(.1),
+                shooter.takeBackALittleBitIndexer().withTimeout(.2),
                 shooter.stopIndexer(),
                 intake.stopIntake()
             )

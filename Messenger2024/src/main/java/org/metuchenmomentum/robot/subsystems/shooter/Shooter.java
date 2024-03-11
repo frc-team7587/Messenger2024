@@ -17,7 +17,7 @@ public class Shooter extends SubsystemBase {
         return run(() -> shooter.setShooterSpeed(ShooterConstants.kSpeakerShootingSpeed));
     }
     public Command prepareSpeakerPosition() {
-        return run(() -> shooter.setShooterPosition(-20));
+        return run(() -> shooter.setShooterPosition(-16));
     }
 
     public Command prepareAmplify() {
@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
     public Command manualShoot() {
         return new SequentialCommandGroup(
              prepareSpeaker()
-            .withTimeout(1.5)
+            .withTimeout(.5)
             .andThen(launchNote().withTimeout(1))   
         );
     }
@@ -51,7 +51,7 @@ public class Shooter extends SubsystemBase {
 
     public Command loadNote() {
         return startEnd(
-            () -> shooter.setIndexerSpeed(-0.3),
+            () -> shooter.setIndexerSpeed(-0.4),
             () -> shooter.setIndexerSpeed(0)
         );
     }
