@@ -41,7 +41,7 @@ public class Shooter extends SubsystemBase {
     }
     
     public Command takeBackALittleBitShooter() {
-        return run(() -> shooter.setShooterSpeed(-0.1));
+        return run(() -> shooter.setShooterSpeed(-0.3));
    
     }
 
@@ -51,7 +51,7 @@ public class Shooter extends SubsystemBase {
 
     public Command loadNote() {
         return startEnd(
-            () -> shooter.setIndexerSpeed(-0.4),
+            () -> shooter.setIndexerSpeed(-1),
             () -> shooter.setIndexerSpeed(0)
         );
     }

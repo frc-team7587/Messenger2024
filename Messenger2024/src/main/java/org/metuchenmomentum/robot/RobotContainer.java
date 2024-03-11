@@ -77,8 +77,8 @@ public class RobotContainer {
 
         // TRight Trigger: starts the speaker scoring sequence
         operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
-            shooter.prepareSpeakerPosition().withTimeout(.3)
-                .andThen(shooter.prepareSpeaker().withTimeout(1.5))
+            shooter.prepareSpeakerPosition().withTimeout(.1)
+                .andThen(shooter.prepareSpeaker().withTimeout(.5))
                 .andThen(shooter.launchNote()
                 .alongWith(intake.intakeOut()).withTimeout(1)
                 .andThen(shooter.stopShooter().withTimeout(.1)))
@@ -100,12 +100,13 @@ public class RobotContainer {
         // Left Bumper: button loads the note in the shooter so the notes doesn't touch the shooter wheels
         operatorController.start().negate().and(operatorController.leftBumper()).toggleOnTrue(
             new SequentialCommandGroup(      
-                intake.releaseNoteManual().withTimeout(2)
-                .alongWith(shooter.loadNote()).withTimeout(2),
+                intake.releaseNoteManual().withTimeout(.5)
+                .alongWith(shooter.loadNote()).withTimeout(.5),
                 intake.turnToNeutral().withTimeout(.1),
-                shooter.takeBackALittleBitIndexer().withTimeout(.2),
+                shooter.takeBackALittleBitShooter().withTimeout(.2).andThen(shooter.stopShooter()),
                 shooter.stopIndexer(),
-                intake.stopIntake()
+                intake.stopIntake(),
+                shooter.stopShooter()
             )
         );
 
@@ -181,9 +182,15 @@ public class RobotContainer {
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            List.of(
+                new Translation2d(1, 0),
+                new Translation2d(0, 0),
+                new Translation2d(1, 1),
+                new Translation2d(0, 0),
+                new Translation2d(1, -1)
+            ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)), config);
+            new Pose2d(0, 0, new Rotation2d(0)), config);
 
         var thetaController = new ProfiledPIDController(
             AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
