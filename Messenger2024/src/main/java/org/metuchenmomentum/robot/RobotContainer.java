@@ -47,11 +47,14 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        // Drive Command
+        // The right trigger acts a brake so the max speed is inversely proportional to how much
+        // the right trigger is held down. When it's held down completely, 
         drivetrain.setDefaultCommand(
             new RunCommand(
                 () -> drivetrain.drive(
-                    -MathUtil.applyDeadband(0.5 * driverController.getLeftY(), IOConstants.kDriveDeadband),
-                    -MathUtil.applyDeadband(0.5 * driverController.getLeftX(), IOConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband((1 - 0.75 * driverController.getRightTriggerAxis()) * driverController.getLeftY(), IOConstants.kDriveDeadband),
+                    -MathUtil.applyDeadband((1 - 0.75 * driverController.getRightTriggerAxis()) * driverController.getLeftX(), IOConstants.kDriveDeadband),
                     -MathUtil.applyDeadband(0.5 * driverController.getRightX(), IOConstants.kDriveDeadband),
                     true,
                     true 
@@ -100,7 +103,7 @@ public class RobotContainer {
                 intake.releaseNoteManual().withTimeout(2)
                 .alongWith(shooter.loadNote()).withTimeout(2),
                 intake.turnToNeutral().withTimeout(.1),
-                shooter.takeBackALittleBitIndexer().withTimeout(.1),
+                shooter.takeBackALittleBitIndexer().withTimeout(.2),
                 shooter.stopIndexer(),
                 intake.stopIntake()
             )
