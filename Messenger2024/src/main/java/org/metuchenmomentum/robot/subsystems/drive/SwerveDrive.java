@@ -4,6 +4,10 @@ import org.metuchenmomentum.robot.Constants.DriveConstants;
 import org.metuchenmomentum.robot.utils.SwerveUtils;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -57,6 +62,28 @@ public class SwerveDrive extends SubsystemBase {
 
     public SwerveDrive() {
         resetHeading();
+
+        AutoBuilder.configureHolonomic(
+            this::getPose,
+            this::resetOdometry,
+            this::getModuleSpeeds,
+            this::driveRobotRelative,
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(5, 0, 0),
+                new PIDConstants(5, 0, 0),
+                4.5,
+                0.5,
+                new ReplanningConfig()
+            ),
+            () -> {
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()) {
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+            },
+            this
+        );
     }
 
 
@@ -134,6 +161,13 @@ public class SwerveDrive extends SubsystemBase {
         setModuleStates(desiredStates);
     }
 
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+
+        SwerveModuleState[] targetStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
+        setModuleStates(targetStates);
+    }
+
     @Override
     public void periodic() {
         odometry.update(getRotation(), getModulePositions());
@@ -175,6 +209,19 @@ public class SwerveDrive extends SubsystemBase {
             rearLeftModule.getPosition(),
             rearRightModule.getPosition()
         };
+    }
+
+    public SwerveModuleState[] getModuleStates() {
+        return new SwerveModuleState[] {
+            frontLeftModule.getState(),
+            frontRightModule.getState(),
+            rearLeftModule.getState(),
+            rearRightModule.getState()
+        };
+    }
+
+    public ChassisSpeeds getModuleSpeeds() {
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     }
 
     /**

@@ -9,7 +9,7 @@ import java.util.List;
 import org.metuchenmomentum.robot.Constants.AutoConstants;
 import org.metuchenmomentum.robot.Constants.DriveConstants;
 import org.metuchenmomentum.robot.Constants.IOConstants;
-
+import org.metuchenmomentum.robot.commands.AutoCode;
 import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
 import org.metuchenmomentum.robot.subsystems.intake.Intake;
 import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
@@ -85,7 +85,7 @@ public class RobotContainer {
                 .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()))
         );
 
-        // POV-Up and POV-Down buttons turn the shooter to the handoff and amp positions respectively
+        // POV-Up and POV-Down buttons turn the shooter to the handoff and amp positions rsespectively
         operatorController.start().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
         operatorController.start().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
 
@@ -170,48 +170,14 @@ public class RobotContainer {
     }   
     
     public Command getAutonomousCommand() {
-        // Create config for trajectory
-        TrajectoryConfig config = new TrajectoryConfig(
-            AutoConstants.kMaxSpeed,
-            AutoConstants.kMaxAcceleration)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
+        Command auto = new SequentialCommandGroup(
+            shooter.prepareSpeakerPosition().withTimeout(.1),
+            shooter.prepareSpeaker().withTimeout(.5),
+            shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
+            shooter.stopShooter().withTimeout(.1),
+            intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())
+        );
 
-        // An example trajectory to follow. All units in meters.
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(
-                new Translation2d(1, 0),
-                new Translation2d(0, 0),
-                new Translation2d(1, 1),
-                new Translation2d(0, 0),
-                new Translation2d(1, -1)
-            ),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(0, 0, new Rotation2d(0)), config);
-
-        var thetaController = new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            exampleTrajectory,
-            drivetrain::getPose, // Functional interface to feed supplier
-            DriveConstants.kDriveKinematics,
-
-            // Position controllers
-            new PIDController(AutoConstants.kPXController, 0, 0),
-            new PIDController(AutoConstants.kPYController, 0, 0),
-            thetaController,
-            drivetrain::setModuleStates,
-            drivetrain);
-
-        // Reset odometry to the starting pose of the trajectory.
-        drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
-
-        // Run path following command, then stop at the end.
-        return swerveControllerCommand.andThen(() -> drivetrain.drive(0, 0, 0, false, false));
+        return auto;
     }
 }
