@@ -4,32 +4,17 @@
 
 package org.metuchenmomentum.robot;
 
-import java.util.List;
-
-import org.metuchenmomentum.robot.Constants.AutoConstants;
-import org.metuchenmomentum.robot.Constants.DriveConstants;
 import org.metuchenmomentum.robot.Constants.IOConstants;
-import org.metuchenmomentum.robot.commands.AutoCode;
 import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
 import org.metuchenmomentum.robot.subsystems.intake.Intake;
 import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
 import org.metuchenmomentum.robot.subsystems.shooter.Shooter;
 import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
-import org.metuchenmomentum.robot.subsystems.vision.Vision;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
@@ -37,7 +22,6 @@ public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
     private final Shooter shooter = new Shooter(new ShooterSparkMax());
-    private final Vision vision = new Vision();
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
     CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
