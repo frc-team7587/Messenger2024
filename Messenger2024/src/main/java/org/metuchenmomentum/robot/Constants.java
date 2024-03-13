@@ -9,11 +9,11 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
     public static final class ClimberConstants {
-        public static final double kLeftHookRaiseSpeed = 1.0;
-        public static final double kLeftHookLowerSpeed = -1.0;
+        public static final double kLeftHookRaiseSpeed = .3;
+        public static final double kLeftHookLowerSpeed = -.3;
 
-        public static final double kRightHookRaiseSpeed = 1.0;
-        public static final double kRightHookLowerSpeed = 1.0;
+        public static final double kRightHookRaiseSpeed = .3;
+        public static final double kRightHookLowerSpeed = .3;
 
         public static final int kLeftHookMotorID = 14;
         public static final int kRightHookMotorID = 15;

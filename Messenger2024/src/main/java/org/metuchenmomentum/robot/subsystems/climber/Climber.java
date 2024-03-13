@@ -1,6 +1,7 @@
 package org.metuchenmomentum.robot.subsystems.climber;
 
 import org.metuchenmomentum.robot.Constants.ClimberConstants;
+import org.metuchenmomentum.robot.subsystems.intake.IntakeConstants;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,29 +14,38 @@ public class Climber extends SubsystemBase {
     }
 
     public Command raiseLeftHook() {
-        return startEnd(
-            () -> climber.setLeftHookSpeed(ClimberConstants.kLeftHookRaiseSpeed),
-            () -> climber.setLeftHookSpeed(0)
-        );
+        return run(
+            () -> climber.setLeftHookSpeed(ClimberConstants.kLeftHookRaiseSpeed));
     }
+    
 
     public Command raiseRightHook() {
-        return startEnd(
-            () -> climber.setRightHookSpeed(ClimberConstants.kRightHookRaiseSpeed),
-            () -> climber.setRightHookSpeed(0)
+        return run(
+            () -> climber.setRightHookSpeed(-ClimberConstants.kLeftHookRaiseSpeed)
+          
         );
     }
 
     public Command lowerLeftHook() {
-        return startEnd(
-            () -> climber.setLeftHookSpeed(ClimberConstants.kLeftHookLowerSpeed),
-            () -> climber.setLeftHookSpeed(0)
+        return run(
+            () -> climber.setLeftHookSpeed(ClimberConstants.kLeftHookLowerSpeed)
+          
         );
     }
 
     public Command lowerRightHook() {
-        return startEnd(
-            () -> climber.setRightHookSpeed(ClimberConstants.kRightHookLowerSpeed),
+        return run(
+            () -> climber.setRightHookSpeed(ClimberConstants.kRightHookLowerSpeed)
+            
+        );
+    }
+    public Command stopLeftHook() {
+        return run(
+            () -> climber.setLeftHookSpeed(0)
+        );
+    }
+    public Command stopRightHook() {
+        return run(
             () -> climber.setRightHookSpeed(0)
         );
     }

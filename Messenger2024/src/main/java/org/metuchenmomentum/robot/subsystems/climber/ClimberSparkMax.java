@@ -13,8 +13,8 @@ public class ClimberSparkMax implements ClimberIO {
     private final RelativeEncoder rightHookEncoder;
 
     public ClimberSparkMax() {
-        leftHook = new CANSparkMax(0, MotorType.kBrushless);
-        rightHook = new CANSparkMax(0, MotorType.kBrushless);
+        leftHook = new CANSparkMax(14, MotorType.kBrushless);
+        rightHook = new CANSparkMax(15, MotorType.kBrushless);
 
         leftHookEncoder = leftHook.getEncoder();
         rightHookEncoder = rightHook.getEncoder();
