@@ -177,6 +177,7 @@ public class RobotContainer {
     
     public Command getAutonomousCommand() {
         Command auto = new SequentialCommandGroup(
+            intake.turnToNeutral().withTimeout(.2),
             shooter.prepareSpeakerPosition().withTimeout(.1),
             shooter.prepareSpeaker().withTimeout(.5),
             shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),

@@ -3,7 +3,11 @@ package org.metuchenmomentum.robot.subsystems.climber;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import org.metuchenmomentum.robot.subsystems.intake.IntakeConstants;
+
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 public class ClimberSparkMax implements ClimberIO {
     private final CANSparkMax leftHook;
@@ -21,6 +25,15 @@ public class ClimberSparkMax implements ClimberIO {
 
         leftHook.setIdleMode(IdleMode.kBrake);
         rightHook.setIdleMode(IdleMode.kBrake);
+        rightHook.setSoftLimit(SoftLimitDirection.kReverse, (float) -6);
+        rightHook.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        rightHook.setSoftLimit(SoftLimitDirection.kForward, (float) 140);
+        rightHook.enableSoftLimit(SoftLimitDirection.kForward, true);
+        leftHook.setSoftLimit(SoftLimitDirection.kReverse, (float) -140);
+        leftHook.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        leftHook.setSoftLimit(SoftLimitDirection.kForward, (float) 6);
+        leftHook.enableSoftLimit(SoftLimitDirection.kForward, true);
+
     }
 
     @Override
