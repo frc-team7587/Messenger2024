@@ -2,8 +2,8 @@ package org.metuchenmomentum.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -32,6 +32,14 @@ public class IntakeSparkMax implements IntakeIO {
         setI(IntakeConstants.kI);
         setD(IntakeConstants.kD);
         pivotController.setOutputRange(IntakeConstants.kMinOutput, IntakeConstants.kMaxOutput);
+
+        // pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+        pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) IntakeConstants.kIntakeGroundPosition);
+        pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, (float) IntakeConstants.kIntakeShooterPosition);
+        pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+
 
         pivotMotor.burnFlash();
         intakeMotor.burnFlash();

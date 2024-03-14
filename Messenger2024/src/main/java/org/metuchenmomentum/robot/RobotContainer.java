@@ -5,6 +5,8 @@
 package org.metuchenmomentum.robot;
 
 import org.metuchenmomentum.robot.Constants.IOConstants;
+import org.metuchenmomentum.robot.subsystems.climber.Climber;
+import org.metuchenmomentum.robot.subsystems.climber.ClimberSparkMax;
 import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
 import org.metuchenmomentum.robot.subsystems.intake.Intake;
 import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
@@ -24,6 +26,7 @@ public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
     private final Shooter shooter = new Shooter(new ShooterSparkMax());
+    private final Climber climber = new Climber(new ClimberSparkMax());
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
     CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
@@ -53,8 +56,25 @@ public class RobotContainer {
         );
         
         /** TELEOPERATED TRIGGERS */
-
-        // A: Turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
+        operatorController.start().negate().and(operatorController.b()).toggleOnTrue(
+            new SequentialCommandGroup(
+                shooter.resetPosition().withTimeout(0),
+                climber.raiseLeftHook().withTimeout(0),
+                climber.raiseRightHook()));
+        operatorController.start().negate().and(operatorController.b()).toggleOnFalse(
+            new SequentialCommandGroup(
+                climber.stopLeftHook().withTimeout(0),
+                climber.stopRightHook()));
+           operatorController.start().negate().and(operatorController.x()).toggleOnTrue(
+            new SequentialCommandGroup(
+                shooter.resetPosition().withTimeout(0),
+                climber.lowerLeftHook().withTimeout(0),
+                climber.lowerRightHook()));
+        operatorController.start().negate().and(operatorController.x()).toggleOnFalse(
+            new SequentialCommandGroup(
+                climber.stopLeftHook().withTimeout(0),
+                climber.stopRightHook()));
+        // A: turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
@@ -161,6 +181,7 @@ public class RobotContainer {
     
     public Command getAutonomousCommand() {
         Command auto = new SequentialCommandGroup(
+            intake.turnToNeutral().withTimeout(.2),
             shooter.prepareSpeakerPosition().withTimeout(.1),
             shooter.prepareSpeaker().withTimeout(.5),
             shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
