@@ -181,16 +181,7 @@ public class RobotContainer {
     }   
     
     public Command getAutonomousCommand() {
-        Command auto = new SequentialCommandGroup(
-            intake.turnToNeutral().withTimeout(.2),
-            shooter.prepareSpeakerPosition().withTimeout(.1),
-            shooter.prepareSpeaker().withTimeout(.5),
-            shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
-            shooter.stopShooter().withTimeout(.1),
-            intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())
-        );
-
-        return auto;
+        return new PathPlannerAuto("3-Note Auto");
     }
 
     public Command autonomousIntakeNote() {
@@ -198,13 +189,23 @@ public class RobotContainer {
     }
 
     public Command autonomousHandoffNote() {
-        return new SequentialCommandGroup(
-            shooter.turnToHandoff().withTimeout(0),
-            intake.turnToShooter()
+        return new SequentialCommandGroup(      
+            intake.releaseNoteManual().withTimeout(.5)
+            .alongWith(shooter.loadNote()).withTimeout(.5),
+            intake.turnToNeutral().withTimeout(.1),
+            shooter.takeBackALittleBitShooter().withTimeout(.2).andThen(shooter.stopShooter()),
+            shooter.stopIndexer(),
+            intake.stopIntake(),
+            shooter.stopShooter()
         );
     }
 
     public Command autonomousShootNote() {
-        return new PathPlannerAuto("3-Note Auto");
+        return shooter.prepareSpeakerPosition().withTimeout(.1)
+                .andThen(shooter.prepareSpeaker().withTimeout(.5))
+                .andThen(shooter.launchNote()
+                .alongWith(intake.intakeOut()).withTimeout(1)
+                .andThen(shooter.stopShooter().withTimeout(.1)))
+                .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()));
     }
 }
