@@ -14,6 +14,7 @@ import org.metuchenmomentum.robot.subsystems.shooter.Shooter;
 import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -204,12 +205,6 @@ public class RobotContainer {
     }
 
     public Command autonomousShootNote() {
-        return new SequentialCommandGroup(
-            shooter.prepareSpeakerPosition().withTimeout(.1),
-            shooter.prepareSpeaker().withTimeout(.5),
-            shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
-            shooter.stopShooter().withTimeout(.1),
-            intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())
-        );
+        return new PathPlannerAuto("3-Note Auto");
     }
 }
