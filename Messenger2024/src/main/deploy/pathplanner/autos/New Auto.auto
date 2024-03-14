@@ -18,10 +18,129 @@
               {
                 "type": "named",
                 "data": {
-                  "name": null
+                  "name": "Intake Note"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Note"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Note 2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center Note"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center Note 2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Note"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Note 2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
           }
         }
       ]
