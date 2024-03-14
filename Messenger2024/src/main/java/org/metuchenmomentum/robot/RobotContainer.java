@@ -11,6 +11,8 @@ import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
 import org.metuchenmomentum.robot.subsystems.shooter.Shooter;
 import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -28,12 +30,16 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+
+        NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
+        NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
+        NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
     }
 
     private void configureBindings() {
         // Drive Command
         // The right trigger acts a brake so the max speed is inversely proportional to how much
-        // the right trigger is held down. When it's held down completely, 
+        // the right trigger is held down. When it's held down completely, the maximum speed is 0.25
         drivetrain.setDefaultCommand(
             new RunCommand(
                 () -> drivetrain.drive(
@@ -48,18 +54,18 @@ public class RobotContainer {
         
         /** TELEOPERATED TRIGGERS */
 
-        // A: turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
+        // A: Turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
-        // Y:  sets the intake the shooter to the handoff position
+        // Y: Sets the intake the shooter to the handoff position
         operatorController.start().negate().and(operatorController.y()).toggleOnTrue(
             shooter.turnToHandoff()
                 .withTimeout(0)
                 .andThen(intake.turnToShooter())
         );
 
-        // TRight Trigger: starts the speaker scoring sequence
+        // Right Trigger: starts the speaker scoring sequence
         operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
             shooter.prepareSpeakerPosition().withTimeout(.1)
                 .andThen(shooter.prepareSpeaker().withTimeout(.5))
@@ -73,7 +79,7 @@ public class RobotContainer {
         operatorController.start().negate().and(operatorController.povUp()).whileTrue(shooter.turnToHandoff());
         operatorController.start().negate().and(operatorController.povDown()).whileTrue(shooter.turnToAmp());
 
-        // X: resets the position
+        // X: Resets the position
         operatorController.start().negate().and(operatorController.x()).whileTrue(
             new SequentialCommandGroup(
                 shooter.resetPosition().withTimeout(0),
@@ -163,5 +169,26 @@ public class RobotContainer {
         );
 
         return auto;
+    }
+
+    public Command autonomousIntakeNote() {
+        return intake.intakeNote();
+    }
+
+    public Command autonomousHandoffNote() {
+        return new SequentialCommandGroup(
+            shooter.turnToHandoff().withTimeout(0),
+            intake.turnToShooter()
+        );
+    }
+
+    public Command autonomousShootNote() {
+        return new SequentialCommandGroup(
+            shooter.prepareSpeakerPosition().withTimeout(.1),
+            shooter.prepareSpeaker().withTimeout(.5),
+            shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
+            shooter.stopShooter().withTimeout(.1),
+            intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())
+        );
     }
 }
