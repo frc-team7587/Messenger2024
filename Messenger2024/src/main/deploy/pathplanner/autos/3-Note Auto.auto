@@ -12,9 +12,21 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -28,6 +40,12 @@
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -48,6 +66,12 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Center Note"
@@ -60,6 +84,12 @@
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -80,6 +110,12 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Left Note"
@@ -92,6 +128,12 @@
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff"
+                }
+              },
               {
                 "type": "path",
                 "data": {
