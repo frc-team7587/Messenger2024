@@ -27,9 +27,9 @@ public class ClimberSparkMax implements ClimberIO {
         rightHook.setIdleMode(IdleMode.kBrake);
         rightHook.setSoftLimit(SoftLimitDirection.kReverse, (float) -6);
         rightHook.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        rightHook.setSoftLimit(SoftLimitDirection.kForward, (float) 140);
+        rightHook.setSoftLimit(SoftLimitDirection.kForward, (float) 160);
         rightHook.enableSoftLimit(SoftLimitDirection.kForward, true);
-        leftHook.setSoftLimit(SoftLimitDirection.kReverse, (float) -140);
+        leftHook.setSoftLimit(SoftLimitDirection.kReverse, (float) -160);
         leftHook.enableSoftLimit(SoftLimitDirection.kReverse, true);
         leftHook.setSoftLimit(SoftLimitDirection.kForward, (float) 6);
         leftHook.enableSoftLimit(SoftLimitDirection.kForward, true);

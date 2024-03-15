@@ -22,12 +22,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Intake Note"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Right Note"
@@ -41,12 +35,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Right Note 2"
@@ -56,21 +44,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot Note"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Note"
-                }
-              },
               {
                 "type": "path",
                 "data": {
@@ -85,12 +61,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Center Note 2"
@@ -100,21 +70,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot Note"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Note"
-                }
-              },
               {
                 "type": "path",
                 "data": {
@@ -129,24 +87,12 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Handoff"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Left Note 2"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot Note"
           }
         }
       ]

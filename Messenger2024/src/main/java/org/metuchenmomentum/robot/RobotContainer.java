@@ -59,7 +59,7 @@ public class RobotContainer {
         /** TELEOPERATED TRIGGERS */
         operatorController.start().negate().and(operatorController.b()).toggleOnTrue(
             new SequentialCommandGroup(
-                shooter.resetPosition().withTimeout(0),
+               // shooter.resetPosition().withTimeout(0),
                 climber.raiseLeftHook().withTimeout(0),
                 climber.raiseRightHook()));
         operatorController.start().negate().and(operatorController.b()).toggleOnFalse(
@@ -68,7 +68,7 @@ public class RobotContainer {
                 climber.stopRightHook()));
            operatorController.start().negate().and(operatorController.x()).toggleOnTrue(
             new SequentialCommandGroup(
-                shooter.resetPosition().withTimeout(0),
+               // shooter.resetPosition().withTimeout(0),
                 climber.lowerLeftHook().withTimeout(0),
                 climber.lowerRightHook()));
         operatorController.start().negate().and(operatorController.x()).toggleOnFalse(
@@ -185,18 +185,19 @@ public class RobotContainer {
     }
 
     public Command autonomousIntakeNote() {
-        return intake.intakeNote();
+        return intake.intakeNoteAuto();
     }
 
     public Command autonomousHandoffNote() {
-        return new SequentialCommandGroup(      
+        return new SequentialCommandGroup(    
+            intake.turnToShooter(),  
             intake.releaseNoteManual().withTimeout(.5)
             .alongWith(shooter.loadNote()).withTimeout(.5),
             intake.turnToNeutral().withTimeout(.1),
             shooter.takeBackALittleBitShooter().withTimeout(.2).andThen(shooter.stopShooter()),
-            shooter.stopIndexer(),
-            intake.stopIntake(),
-            shooter.stopShooter()
+            shooter.stopIndexer().withTimeout(0),
+            intake.stopIntake().withTimeout(0),
+            shooter.stopShooter().withTimeout(0)
         );
     }
 
@@ -206,6 +207,6 @@ public class RobotContainer {
                 .andThen(shooter.launchNote()
                 .alongWith(intake.intakeOut()).withTimeout(1)
                 .andThen(shooter.stopShooter().withTimeout(.1)))
-                .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer()));
+                .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())).withTimeout(0);
     }
 }
