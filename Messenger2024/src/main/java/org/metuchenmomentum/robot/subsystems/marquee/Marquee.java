@@ -1,8 +1,13 @@
 package org.metuchenmomentum.robot.subsystems.marquee;
 
+import java.util.Optional;
+
 import org.metuchenmomentum.robot.subsystems.marquee.DisplayCommand;
 import org.metuchenmomentum.robot.subsystems.marquee.DisplayConnection;
 import org.metuchenmomentum.robot.subsystems.marquee.DisplayMessage;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * Test driver for the Metuchen Momentum marquee. The driver cycles
@@ -33,7 +38,7 @@ public class Marquee {
      * that is, every 20 milliseconds.
      */
     public void robotPeriodic() {
-        callCount %= 300;
+        /*callCount %= 300;
         if (callCount == 0) {
           switch (cycleCount) {
             case 0:
@@ -47,11 +52,65 @@ public class Marquee {
           cycleCount = (++cycleCount) % 18;
         }
         ++callCount;
+        */
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if (ally.get() == Alliance.Red){
+          callCount %= 300;
+            if (callCount == 0) {
+              switch (cycleCount) {
+                case 0:
+                  redTeamNumber();
+                  break;
+                case 1:
+                  redTextCrawl();
+                  break;
+              }
+        
+              cycleCount = (++cycleCount) % 18;
+            }
+            ++callCount;
+        }
+        if (ally.get() == Alliance.Blue) {
+          callCount %= 300;
+        if (callCount == 0) {
+          switch (cycleCount) {
+            case 0:
+              blueTeamNumber();
+              break;
+            case 1:
+              blueTextCrawl();
+              break;
+          }
+          cycleCount = (++cycleCount) % 18;
+        }
+        ++callCount;
+        }
       }
+
+  private void blueTextCrawl(){
+     DisplayMessage smoothCrawl = new DisplayMessage()
+        .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
+        .setText("GO BLUE!!! :)")
+        .setForegroundRed(0)
+        .setForegroundGreen(0)
+        .setForegroundBlue(255)
+        .setDelay1(40);
+      displayConnection.send(smoothCrawl);
+  }
+  private void redTextCrawl(){
+     DisplayMessage smoothCrawl = new DisplayMessage()
+        .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
+        .setText("GO RED!!! :)")
+        .setForegroundRed(255)
+        .setForegroundGreen(0)
+        .setForegroundBlue(0)
+        .setDelay1(40);
+      displayConnection.send(smoothCrawl);
+  }
   private void blueTeamNumber() {
         // Fill the display with blue.
         DisplayMessage setBlue = new DisplayMessage()
-        .setText(MO_NO)
+        .setText(teamNumber)
         .setForegroundBlue(127)
         .setDisplayCommand(DisplayCommand.STATIC_TEXT);
       int bytesSent = displayConnection.send(setBlue);
@@ -63,7 +122,7 @@ public class Marquee {
   private void redTeamNumber() {
     // Fill the display with blue.
     DisplayMessage setBlue = new DisplayMessage()
-      .setText(MO_NO)
+      .setText(teamNumber)
       .setForegroundRed(127)
       .setDisplayCommand(DisplayCommand.STATIC_TEXT);
     int bytesSent = displayConnection.send(setBlue);
@@ -229,7 +288,7 @@ public class Marquee {
   private void oversizeMessageTest() {
     DisplayMessage smoothCrawl = new DisplayMessage()
         .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
-        .setText(TOO_LONG)
+        .setText("some long message")
         .setForegroundRed(64)
         .setForegroundGreen(32)
         .setForegroundBlue(64)
