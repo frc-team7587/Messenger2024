@@ -31,7 +31,7 @@ public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
     private final Shooter shooter = new Shooter(new ShooterSparkMax());
-    private final Climber climber = new Climber(new ClimberSparkMax());
+    // private final Climber climber = new Climber(new ClimberSparkMax());
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
     CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
@@ -44,7 +44,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
         NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
         NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
-        NamedCommands.registerCommand("Lower Climbers", autonomousLowerClimber());
+        // NamedCommands.registerCommand("Lower Climbers", autonomousLowerClimber());
     }
 
     private void configureBindings() {
@@ -64,24 +64,26 @@ public class RobotContainer {
         );
         
         /** TELEOPERATED TRIGGERS */
-        operatorController.start().negate().and(operatorController.b()).toggleOnTrue(
-            new SequentialCommandGroup(
-               // shooter.resetPosition().withTimeout(0),
-                climber.raiseLeftHook().withTimeout(0),
-                climber.raiseRightHook()));
-        operatorController.start().negate().and(operatorController.b()).toggleOnFalse(
-            new SequentialCommandGroup(
-                climber.stopLeftHook().withTimeout(0),
-                climber.stopRightHook()));
-           operatorController.start().negate().and(operatorController.x()).toggleOnTrue(
-            new SequentialCommandGroup(
-               // shooter.resetPosition().withTimeout(0),
-                climber.lowerLeftHook().withTimeout(0),
-                climber.lowerRightHook()));
-        operatorController.start().negate().and(operatorController.x()).toggleOnFalse(
-            new SequentialCommandGroup(
-                climber.stopLeftHook().withTimeout(0),
-                climber.stopRightHook()));
+
+        // Climber Controls
+        // operatorController.start().negate().and(operatorController.b()).toggleOnTrue(
+        //     new SequentialCommandGroup(
+        //        // shooter.resetPosition().withTimeout(0),
+        //         climber.raiseLeftHook().withTimeout(0),
+        //         climber.raiseRightHook()));
+        // operatorController.start().negate().and(operatorController.b()).toggleOnFalse(
+        //     new SequentialCommandGroup(
+        //         climber.stopLeftHook().withTimeout(0),
+        //         climber.stopRightHook()));
+        //    operatorController.start().negate().and(operatorController.x()).toggleOnTrue(
+        //     new SequentialCommandGroup(
+        //        // shooter.resetPosition().withTimeout(0),
+        //         climber.lowerLeftHook().withTimeout(0),
+        //         climber.lowerRightHook()));
+        // operatorController.start().negate().and(operatorController.x()).toggleOnFalse(
+        //     new SequentialCommandGroup(
+        //         climber.stopLeftHook().withTimeout(0),
+        //         climber.stopRightHook()));
         // A: turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
@@ -191,9 +193,9 @@ public class RobotContainer {
         return new PathPlannerAuto("Shoot Only");
     }
 
-    public Command autonomousLowerClimber() {
-        return climber.lowerLeftHook().withTimeout(0).andThen(climber.lowerRightHook()).withTimeout(3);
-    }
+    // public Command autonomousLowerClimber() {
+    //     return climber.lowerLeftHook().withTimeout(0).andThen(climber.lowerRightHook()).withTimeout(3);
+    // }
 
     public Command autonomousIntakeNote() {
         return intake.intakeNote().withTimeout(2)
