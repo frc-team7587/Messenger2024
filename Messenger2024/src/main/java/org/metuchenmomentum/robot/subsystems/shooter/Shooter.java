@@ -16,7 +16,7 @@ public class Shooter extends SubsystemBase {
         return run(() -> shooter.setShooterSpeed(ShooterConstants.kSpeakerShootingSpeed));
     }
     public Command prepareSpeakerPosition() {
-        return run(() -> shooter.setShooterPosition(-20.6666));
+        return run(() -> shooter.setShooterPosition(-19));
     }
 
     public Command prepareAmplify() {

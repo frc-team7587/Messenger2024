@@ -42,7 +42,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
         NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
-        NamedCommands.registerCommand("Shoot Note", autonomousShootNote2());
+        NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
     }
 
     private void configureBindings() {
@@ -207,28 +207,14 @@ public class RobotContainer {
         );
     }
 
- /*   public Command autonomousShootNote() {
-        return shooter.prepareSpeakerPosition().withTimeout(0.1)
-            .andThen(shooter.prepareSpeaker().withTimeout(0.5))
-            .andThen(shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1)
-            .andThen(shooter.stopShooter().withTimeout(0.1)))
-            .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())).withTimeout(0);
-    }
-*/
-    public Command autonomousShootNote2() {
+    public Command autonomousShootNote() {
         return new SequentialCommandGroup(      
             shooter.prepareSpeakerPosition().withTimeout(0.3),
             shooter.prepareSpeaker().withTimeout(0.5),
             shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
-            shooter.stopShooter().withTimeout(0.1),
-            shooter.stopIndexer().withTimeout(0.1),
-            intake.stopIntake().withTimeout(0.1)
+            shooter.stopShooter().withTimeout(0),
+            shooter.stopIndexer().withTimeout(0),
+            intake.stopIntake().withTimeout(0)
         );
-       /* return new SequentialCommandGroup(
-            // shooter.prepareSpeakerPosition(),
-            shooter.prepareSpeaker().withTimeout(0.5),
-            shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
-            shooter.stopShooter().withTimeout(0.1),
-            intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())).withTimeout(0); */
     }
 }
