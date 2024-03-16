@@ -55,6 +55,7 @@ public class Marquee {
         */
         Optional<Alliance> ally = DriverStation.getAlliance();
         if (ally.get() == Alliance.Red){
+          System.out.println("Allianace is Red");
           callCount %= 300;
             if (callCount == 0) {
               switch (cycleCount) {
@@ -71,6 +72,7 @@ public class Marquee {
             ++callCount;
         }
         if (ally.get() == Alliance.Blue) {
+          System.out.println("Allianace is Red");
           callCount %= 300;
         if (callCount == 0) {
           switch (cycleCount) {
@@ -85,7 +87,7 @@ public class Marquee {
         }
         ++callCount;
         }
-      }
+    }
 
   private void blueTextCrawl(){
      DisplayMessage smoothCrawl = new DisplayMessage()

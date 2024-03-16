@@ -34,11 +34,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
         //marquee
         if (displayDriver != null) {
             displayDriver.robotPeriodic();
         }
+        CommandScheduler.getInstance().run();
     }
 
     @Override
@@ -59,12 +59,12 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
+        //marquee
+        m_autoSelected = m_chooser.getSelected();
 
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
-        //marquee
-        m_autoSelected = m_chooser.getSelected();
     }
 
     @Override

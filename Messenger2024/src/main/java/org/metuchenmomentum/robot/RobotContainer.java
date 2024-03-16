@@ -21,6 +21,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -43,6 +44,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
         NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
         NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
+        NamedCommands.registerCommand("Lower Climbers", autonomousLowerClimber());
     }
 
     private void configureBindings() {
@@ -186,7 +188,11 @@ public class RobotContainer {
     }   
     
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("3-Note Auto");
+        return new PathPlannerAuto("Shoot Only");
+    }
+
+    public Command autonomousLowerClimber() {
+        return climber.lowerLeftHook().withTimeout(0).andThen(climber.lowerRightHook()).withTimeout(3);
     }
 
     public Command autonomousIntakeNote() {
@@ -209,6 +215,7 @@ public class RobotContainer {
 
     public Command autonomousShootNote() {
         return new SequentialCommandGroup(      
+            intake.turnToNeutral().withTimeout(0.1),
             shooter.prepareSpeakerPosition().withTimeout(0.3),
             shooter.prepareSpeaker().withTimeout(0.5),
             shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
