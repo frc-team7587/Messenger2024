@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-        //marquee
+        /*/marquee
         m_chooser.setDefaultOption("Default Auto", kDefaultAuto); 
         m_chooser.addOption("My Auto", kCustomAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
@@ -30,15 +30,17 @@ public class Robot extends TimedRobot {
         digOut0.setPWMRate(1000);
         digOut0.enablePWM(0.5);
         displayDriver = new Marquee(DisplayConnectionFactory.usbConnection());
+*/
     }
 
     @Override
     public void robotPeriodic() {
-        //marquee
-        if (displayDriver != null) {
-            displayDriver.robotPeriodic();
-        }
+        
         CommandScheduler.getInstance().run();
+         //marquee
+        //if (displayDriver != null) {
+          //  displayDriver.robotPeriodic();
+        //}
     }
 
     @Override
@@ -60,7 +62,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
         //marquee
-        m_autoSelected = m_chooser.getSelected();
+        //m_autoSelected = m_chooser.getSelected();
 
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
@@ -69,7 +71,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        //marquee
+        /*/marquee
         switch (m_autoSelected) {
             case kCustomAuto:
                 DisplayMessage smoothCrawl = new DisplayMessage()
@@ -93,7 +95,7 @@ public class Robot extends TimedRobot {
                 //displayConnection.send(smoothCrawl);
                 break;
             //255,69,0
-        }
+        }*/
     }
 
     @Override

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 5.5
+      "x": 0.6924667702808289,
+      "y": 4.450881594436834
     },
-    "rotation": 0
+    "rotation": -59.74356283647074
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left Note"
+                  "pathName": "Near Source"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.5
                 }
               },
               {
@@ -37,28 +43,9 @@
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left Note 2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Handoff Note"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "Shoot Note"
+            "name": "Handoff Note"
           }
         }
       ]

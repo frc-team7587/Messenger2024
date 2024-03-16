@@ -31,7 +31,11 @@ public interface IntakeIO {
 
     public void setD(double d);
 
+    public void setFF(double ff);
+
     public double getP();
+
+    public double getFF();
 
     public double getI();
 

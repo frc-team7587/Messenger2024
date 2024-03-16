@@ -21,12 +21,14 @@ public class Marquee {
     private final DisplayConnection displayConnection;
 
     private int callCount;
+    private int callCount1;
     private int cycleCount;
   
     public Marquee(DisplayConnection displayConnection) {
         this.displayConnection = displayConnection;
         callCount = 0;
         cycleCount = 0;
+        callCount1 = 0;
     }
 
     public void init() {
@@ -54,39 +56,13 @@ public class Marquee {
         ++callCount;
         */
         Optional<Alliance> ally = DriverStation.getAlliance();
-        if (ally.get() == Alliance.Red){
-          System.out.println("Allianace is Red");
-          callCount %= 300;
-            if (callCount == 0) {
-              switch (cycleCount) {
-                case 0:
-                  redTeamNumber();
-                  break;
-                case 1:
-                  redTextCrawl();
-                  break;
-              }
-        
-              cycleCount = (++cycleCount) % 18;
-            }
-            ++callCount;
-        }
-        if (ally.get() == Alliance.Blue) {
-          System.out.println("Allianace is Red");
-          callCount %= 300;
-        if (callCount == 0) {
-          switch (cycleCount) {
-            case 0:
-              blueTeamNumber();
-              break;
-            case 1:
-              blueTextCrawl();
-              break;
+          if (ally.get() == Alliance.Red){
+           redTextCrawl();
           }
-          cycleCount = (++cycleCount) % 18;
-        }
-        ++callCount;
-        }
+          if (ally.get() == Alliance.Blue) {
+            blueTextCrawl();
+          }
+        
     }
 
   private void blueTextCrawl(){

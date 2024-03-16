@@ -31,13 +31,14 @@ public class IntakeSparkMax implements IntakeIO {
         setP(IntakeConstants.kP);
         setI(IntakeConstants.kI);
         setD(IntakeConstants.kD);
+        setFF(IntakeConstants.kFF);
         pivotController.setOutputRange(IntakeConstants.kMinOutput, IntakeConstants.kMaxOutput);
 
         // pivotMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
         pivotMotor.setSoftLimit(SoftLimitDirection.kReverse, (float) IntakeConstants.kIntakeGroundPosition);
         pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
-        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, (float) IntakeConstants.kIntakeShooterPosition);
+        pivotMotor.setSoftLimit(SoftLimitDirection.kForward, (float) (IntakeConstants.kIntakeShooterPosition));
         pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
 
 
@@ -79,6 +80,16 @@ public class IntakeSparkMax implements IntakeIO {
     public void setD(double d) {
         pivotController.setD(d);
     }
+    
+    @Override
+    public void setFF(double ff) {
+        pivotController.setFF(ff);
+    }
+
+    @Override
+    public double getFF() {
+        return pivotController.getFF();
+    }
 
     @Override
     public double getP() {
@@ -99,4 +110,5 @@ public class IntakeSparkMax implements IntakeIO {
     public void reset() {
         pivotEncoder.setPosition(0);
     }
-}
+}   
+
