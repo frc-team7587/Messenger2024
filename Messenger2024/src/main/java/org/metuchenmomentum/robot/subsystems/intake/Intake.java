@@ -20,14 +20,6 @@ public class Intake extends SubsystemBase {
 
     }
 
-    public Command intakeNoteAuto() {
-        return new SequentialCommandGroup(
-            turnToGround().withTimeout(0),
-            intakeIn().withTimeout(2)
-        );
-    }
-
-
     // runs the intake
     public Command intakeIn() {
         return run(

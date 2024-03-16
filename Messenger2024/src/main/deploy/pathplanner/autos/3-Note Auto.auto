@@ -26,6 +26,12 @@
                 "data": {
                   "pathName": "Right Note"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
+                }
               }
             ]
           }
@@ -39,8 +45,20 @@
                 "data": {
                   "pathName": "Right Note 2"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff Note"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
           }
         },
         {
@@ -51,6 +69,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "Center Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
                 }
               }
             ]
@@ -65,8 +89,20 @@
                 "data": {
                   "pathName": "Center Note 2"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff Note"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
           }
         },
         {
@@ -77,6 +113,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "Left Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Note"
                 }
               }
             ]
@@ -91,8 +133,20 @@
                 "data": {
                   "pathName": "Left Note 2"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Handoff Note"
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
           }
         }
       ]

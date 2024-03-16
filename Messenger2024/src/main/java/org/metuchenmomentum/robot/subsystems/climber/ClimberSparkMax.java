@@ -3,9 +3,6 @@ package org.metuchenmomentum.robot.subsystems.climber;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
-import org.metuchenmomentum.robot.subsystems.intake.IntakeConstants;
-
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 

@@ -1,8 +1,6 @@
 package org.metuchenmomentum.robot.subsystems.climber;
 
 import org.metuchenmomentum.robot.Constants.ClimberConstants;
-import org.metuchenmomentum.robot.subsystems.intake.IntakeConstants;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

@@ -14,18 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake Note"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Handoff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Shoot Note"
           }
         }

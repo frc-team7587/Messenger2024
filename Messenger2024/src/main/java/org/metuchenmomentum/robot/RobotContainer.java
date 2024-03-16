@@ -16,6 +16,8 @@ import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -32,12 +34,14 @@ public class RobotContainer {
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
     CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
 
+    UsbCamera camera = CameraServer.startAutomaticCapture();
+
     public RobotContainer() {
         configureBindings();
 
         NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
         NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
-        NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
+        NamedCommands.registerCommand("Shoot Note", autonomousShootNote2());
     }
 
     private void configureBindings() {
@@ -185,28 +189,45 @@ public class RobotContainer {
     }
 
     public Command autonomousIntakeNote() {
-        return intake.intakeNoteAuto();
+        return intake.intakeNote().withTimeout(2)
+            .andThen(intake.turnToShooter().withTimeout(0.5))
+            .andThen(intake.stopIntake().withTimeout(0));
     }
 
     public Command autonomousHandoffNote() {
-        return new SequentialCommandGroup(    
-            intake.turnToShooter(),  
-            intake.releaseNoteManual().withTimeout(.5)
-            .alongWith(shooter.loadNote()).withTimeout(.5),
-            intake.turnToNeutral().withTimeout(.1),
-            shooter.takeBackALittleBitShooter().withTimeout(.2).andThen(shooter.stopShooter()),
+        return new SequentialCommandGroup(      
+            shooter.turnToHandoff().withTimeout(0.3),
+            intake.releaseNoteManual().withTimeout(0.5).alongWith(shooter.loadNote()).withTimeout(0.5),
+            intake.turnToNeutral().withTimeout(0.1),
+            shooter.takeBackALittleBitIndexer().withTimeout(0.2).andThen(shooter.stopShooter().withTimeout(0)),
             shooter.stopIndexer().withTimeout(0),
             intake.stopIntake().withTimeout(0),
             shooter.stopShooter().withTimeout(0)
         );
     }
 
-    public Command autonomousShootNote() {
-        return shooter.prepareSpeakerPosition().withTimeout(.1)
-                .andThen(shooter.prepareSpeaker().withTimeout(.5))
-                .andThen(shooter.launchNote()
-                .alongWith(intake.intakeOut()).withTimeout(1)
-                .andThen(shooter.stopShooter().withTimeout(.1)))
-                .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())).withTimeout(0);
+ /*   public Command autonomousShootNote() {
+        return shooter.prepareSpeakerPosition().withTimeout(0.1)
+            .andThen(shooter.prepareSpeaker().withTimeout(0.5))
+            .andThen(shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1)
+            .andThen(shooter.stopShooter().withTimeout(0.1)))
+            .andThen(intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())).withTimeout(0);
+    }
+*/
+    public Command autonomousShootNote2() {
+        return new SequentialCommandGroup(      
+            shooter.prepareSpeakerPosition().withTimeout(0.3),
+            shooter.prepareSpeaker().withTimeout(0.5),
+            shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
+            shooter.stopShooter().withTimeout(0.1),
+            shooter.stopIndexer().withTimeout(0.1),
+            intake.stopIntake().withTimeout(0.1)
+        );
+       /* return new SequentialCommandGroup(
+            // shooter.prepareSpeakerPosition(),
+            shooter.prepareSpeaker().withTimeout(0.5),
+            shooter.launchNote().alongWith(intake.intakeOut()).withTimeout(1),
+            shooter.stopShooter().withTimeout(0.1),
+            intake.stopIntake().withTimeout(0).alongWith(shooter.stopIndexer())).withTimeout(0); */
     }
 }

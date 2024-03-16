@@ -13,7 +13,7 @@ public class IntakeConstants {
     public static final int kIntakeMotorID = 9;
     public static final int kIntakePivotMotorID = 10;
 
-    public static final double kP = 0.3;
+    public static final double kP = 0.05;
     public static final double kI = 0.0;
     public static final double kD = 0.9;
     public static final double kMinOutput = -1.0;
