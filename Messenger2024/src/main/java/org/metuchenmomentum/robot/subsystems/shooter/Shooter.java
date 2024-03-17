@@ -99,7 +99,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command turnToHandoff() {
-        return run(() -> shooter.setShooterPosition(-25));
+        return run(() -> shooter.setShooterPosition(-28));
     }
 
     public Command resetPosition() {

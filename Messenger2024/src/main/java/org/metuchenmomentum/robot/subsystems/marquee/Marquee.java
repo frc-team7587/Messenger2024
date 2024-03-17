@@ -55,13 +55,13 @@ public class Marquee {
         }
         ++callCount;
         */
-        Optional<Alliance> ally = DriverStation.getAlliance();
-          if (ally.get() == Alliance.Red){
-           redTextCrawl();
-          }
-          if (ally.get() == Alliance.Blue) {
+        //Optional<Alliance> ally = DriverStation.getAlliance();
+          //if (ally.get() == Alliance.Red){
+           //redTextCrawl();
+          //}
+          //if (ally.get() == Alliance.Blue) {
             blueTextCrawl();
-          }
+          //}
         
     }
 

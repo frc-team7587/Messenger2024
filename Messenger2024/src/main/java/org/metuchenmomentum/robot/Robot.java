@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-        /*/marquee
+        //marquee
         m_chooser.setDefaultOption("Default Auto", kDefaultAuto); 
         m_chooser.addOption("My Auto", kCustomAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
@@ -30,17 +30,17 @@ public class Robot extends TimedRobot {
         digOut0.setPWMRate(1000);
         digOut0.enablePWM(0.5);
         displayDriver = new Marquee(DisplayConnectionFactory.usbConnection());
-*/
+      //marquee
+        if (displayDriver != null) {
+            displayDriver.robotPeriodic();
+        }
     }
 
     @Override
     public void robotPeriodic() {
         
         CommandScheduler.getInstance().run();
-         //marquee
-        //if (displayDriver != null) {
-          //  displayDriver.robotPeriodic();
-        //}
+   
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         autonomousCommand = robotContainer.getAutonomousCommand();
         //marquee
-        //m_autoSelected = m_chooser.getSelected();
+        m_autoSelected = m_chooser.getSelected();
 
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
