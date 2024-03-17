@@ -1,6 +1,7 @@
 package org.metuchenmomentum.robot.subsystems.drive;
 
 import org.metuchenmomentum.robot.Constants.DriveConstants;
+import org.metuchenmomentum.robot.subsystems.vision.Vision;
 import org.metuchenmomentum.robot.utils.SwerveUtils;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -9,6 +10,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,6 +22,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** The swerve drivetrain consisting of four independently-controlled swerve modules of turning and driving motors. */
@@ -60,6 +64,15 @@ public class SwerveDrive extends SubsystemBase {
         DriveConstants.kDriveKinematics, getRotation(), getModulePositions()
     );
 
+    SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+        DriveConstants.kDriveKinematics, getRotation(), getModulePositions(), new Pose2d()
+    );
+
+    Field2d odometry_field = new Field2d();
+    Field2d pose_field = new Field2d();
+
+    private final Vision vision = new Vision();
+
     public SwerveDrive() {
         resetHeading();
 
@@ -84,6 +97,9 @@ public class SwerveDrive extends SubsystemBase {
             },
             this
         );
+
+        SmartDashboard.putData("Odometry", odometry_field);
+        SmartDashboard.putData("Pose", pose_field);
     }
 
 
@@ -171,6 +187,14 @@ public class SwerveDrive extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(getRotation(), getModulePositions());
+        poseEstimator.update(getRotation(), getModulePositions());
+
+        if (vision.getLatestPose(getPose()).isPresent()) {
+            poseEstimator.addVisionMeasurement(getPose(), vision.getTimestamp());
+        }
+
+        odometry_field.setRobotPose(odometry.getPoseMeters());
+        pose_field.setRobotPose(poseEstimator.getEstimatedPosition());
     }
 
     /** 
@@ -194,7 +218,8 @@ public class SwerveDrive extends SubsystemBase {
      * @return The pose of the robot.
      */
     public Pose2d getPose() {
-        return odometry.getPoseMeters();
+        // return odometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
 
 
@@ -242,6 +267,7 @@ public class SwerveDrive extends SubsystemBase {
      */
     public void resetOdometry(Pose2d pose) {
         odometry.resetPosition(getRotation(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getRotation(), getModulePositions(), pose);
     }
 
     /**
