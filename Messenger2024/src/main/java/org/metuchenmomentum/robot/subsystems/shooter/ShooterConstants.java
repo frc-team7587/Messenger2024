@@ -12,7 +12,7 @@ public class ShooterConstants {
 
     public static final double kNeutralPosition = 0;
     public static final double kHandoffPosition = 16;
-    public static final double kAmpPosition = 140;
+    public static final double kAmpPosition = 130; //COMP 140
 
     public static final int kShootingMotorID = 11;
     public static final int kIndexingMotorID = 12;

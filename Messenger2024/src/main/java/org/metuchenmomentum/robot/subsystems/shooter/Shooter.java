@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public Command turnToAmp() {
-        return run(() -> shooter.setShooterPosition(-70));
+        return run(() -> shooter.setShooterPosition(-67)); //comp -70
     }
 
     public Command turnToHandoff() {

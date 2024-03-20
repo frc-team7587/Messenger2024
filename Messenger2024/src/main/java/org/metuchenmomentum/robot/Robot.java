@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
         digOut0.setPWMRate(1000);
         digOut0.enablePWM(0.5);
         displayDriver = new Marquee(DisplayConnectionFactory.usbConnection());
-      //marquee
+        //marquee
         if (displayDriver != null) {
             displayDriver.robotPeriodic();
         }
@@ -71,31 +71,15 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        /*/marquee
+        //marquee
         switch (m_autoSelected) {
             case kCustomAuto:
-                DisplayMessage smoothCrawl = new DisplayMessage()
-                    .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
-                    .setText("auto > driver")
-                    .setForegroundRed(64)
-                    .setForegroundGreen(32)
-                    .setForegroundBlue(64)
-                    .setDelay1(40);
-                //displayConnection.send(smoothCrawl);
+                displayDriver.autonomousPeriodic();
                 break;
             case kDefaultAuto:
-            default:
-                DisplayMessage smoothCrawl2 = new DisplayMessage()
-                    .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
-                    .setText("auto > driver")
-                    .setForegroundRed(255)
-                    .setForegroundGreen(69)
-                    .setForegroundBlue(0)
-                    .setDelay1(40);
-                //displayConnection.send(smoothCrawl);
+                displayDriver.autonomousPeriodic();
                 break;
-            //255,69,0
-        }*/
+        }
     }
 
     @Override

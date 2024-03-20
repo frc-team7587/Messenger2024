@@ -55,14 +55,24 @@ public class Marquee {
         }
         ++callCount;
         */
-        //Optional<Alliance> ally = DriverStation.getAlliance();
-          //if (ally.get() == Alliance.Red){
-           //redTextCrawl();
-          //}
-          //if (ally.get() == Alliance.Blue) {
+        Optional<Alliance> ally = DriverStation.getAlliance();
+          if (ally.get() == Alliance.Red){
+           redTextCrawl();
+          }
+          if (ally.get() == Alliance.Blue) {
             blueTextCrawl();
-          //}
+          }
         
+    }
+    public void autonomousPeriodic() {
+      DisplayMessage smoothCrawl = new DisplayMessage()
+                    .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
+                    .setText("auto > driver")
+                    .setForegroundRed(255)
+                    .setForegroundGreen(69)
+                    .setForegroundBlue(0)
+                    .setDelay1(40);
+                displayConnection.send(smoothCrawl);
     }
 
   private void blueTextCrawl(){
@@ -71,7 +81,7 @@ public class Marquee {
         .setText("GO BLUE!!! :)")
         .setForegroundRed(0)
         .setForegroundGreen(0)
-        .setForegroundBlue(255)
+        .setForegroundBlue(150)
         .setDelay1(40);
       displayConnection.send(smoothCrawl);
   }

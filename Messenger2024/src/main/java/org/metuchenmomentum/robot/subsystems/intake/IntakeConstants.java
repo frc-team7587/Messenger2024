@@ -6,7 +6,7 @@ public class IntakeConstants {
     public static final double kPivotUpSpeed = -0.25;
     public static final double kPivotDownSpeed = 0.25;
 
-    public static final double kIntakeGroundPosition = -35;
+    public static final double kIntakeGroundPosition = -36; //comp -35
     public static final double kIntakeShooterPosition = -0.5;
     public static final double kIntakeNeutralPosition = -15.0;
 
@@ -16,7 +16,7 @@ public class IntakeConstants {
     public static final double kP = 0.03;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
-    public static final double kFF = 0.01;
+    public static final double kFF = 0.0;
     public static final double kMinOutput = -1.0;
     public static final double kMaxOutput = 1.0;
 

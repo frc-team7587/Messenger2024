@@ -190,7 +190,7 @@ public class RobotContainer {
     }   
     
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Shoot Only");
+        return new PathPlannerAuto("New Auto");
     }
 
     // public Command autonomousLowerClimber() {
