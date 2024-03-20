@@ -24,14 +24,13 @@ public class Vision extends SubsystemBase {
     private final PhotonCamera camera;
     private final PhotonPoseEstimator estimator;
     private PhotonPipelineResult currentResult;
-    private List<PhotonTrackedTarget> currentTargets;
     private PhotonTrackedTarget currentBestTarget;
 
-    private Transform3d kRobotToCam = new Transform3d(Units.inchesToMeters(14), // change this
-        0, 
-        0,  // change the z for this
-        new Rotation3d(0, 0, // also look at this
-        0));
+    private Transform3d kRobotToCam = new Transform3d(
+        Units.inchesToMeters(14),
+        0,
+        Units.inchesToMeters(21),
+        new Rotation3d(0, Units.degreesToRadians(-85), 0));
     
     public Vision() {
         camera = new PhotonCamera("7587_Camera");
@@ -50,7 +49,6 @@ public class Vision extends SubsystemBase {
     }
 
     public void getLatestTargets() {
-        currentTargets = currentResult.getTargets();
         currentBestTarget = currentResult.getBestTarget();
     }
 
@@ -67,8 +65,8 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putBoolean("Has Targets", hasTargets());
         if (hasTargets()) {
             SmartDashboard.putNumber("Best Target Area", currentBestTarget.getArea());
-            SmartDashboard.putNumber("Best Target X", currentBestTarget.getPitch());
-            SmartDashboard.putNumber("Best Target Y", currentBestTarget.getYaw());
+            SmartDashboard.putNumber("Best Target Pitch", currentBestTarget.getPitch());
+            SmartDashboard.putNumber("Best Target Yaw", currentBestTarget.getYaw());
             SmartDashboard.putNumber("Best Target ID", currentBestTarget.getFiducialId());
         }
     }
