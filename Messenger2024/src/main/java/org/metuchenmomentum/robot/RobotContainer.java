@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
 public class RobotContainer {
-    private final SwerveDrive drivetrain = new SwerveDrive();
+    public final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
     private final Shooter shooter = new Shooter(new ShooterSparkMax());
     private final Climber climber = new Climber(new ClimberSparkMax());
