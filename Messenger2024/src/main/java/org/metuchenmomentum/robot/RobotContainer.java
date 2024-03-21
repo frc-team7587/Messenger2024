@@ -85,7 +85,8 @@ public class RobotContainer {
                  climber.stopLeftHook().withTimeout(0),
                  climber.stopRightHook()));
         // A: turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
-        operatorController.start().negate().and(operatorController.a()).toggleOnTrue(intake.intakeNote());
+        operatorController.start().negate().and(operatorController.a()).toggleOnTrue(
+            shooter.stopShooter().withTimeout(0).andThen(shooter.stopIndexer().withTimeout(0)).andThen(intake.intakeNote()));
         operatorController.start().negate().and(operatorController.a()).toggleOnFalse(intake.stopIntake());
 
         // Y: Sets the intake the shooter to the handoff position
@@ -113,7 +114,10 @@ public class RobotContainer {
         operatorController.start().negate().and(operatorController.x()).whileTrue(
             new SequentialCommandGroup(
                 shooter.resetPosition().withTimeout(0),
-                intake.turnToShooter()
+                intake.turnToShooter().withTimeout(0),
+                intake.stopIntake().withTimeout(0),
+                shooter.stopIndexer().withTimeout(0),
+                shooter.stopShooter().withTimeout(0)
             )
         );
 
@@ -190,7 +194,7 @@ public class RobotContainer {
     }   
     
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("New Auto");
+        return new PathPlannerAuto("3-Note Auto");
     }
 
     // public Command autonomousLowerClimber() {
