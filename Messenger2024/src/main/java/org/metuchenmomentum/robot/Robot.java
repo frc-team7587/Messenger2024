@@ -18,6 +18,9 @@ public class Robot extends TimedRobot {
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
     private Marquee displayDriver;
     private DigitalOutput digOut0;
+    //display sponsors
+    private DisplaySponsors displaySponsors;
+    
 
     @Override
     public void robotInit() {
@@ -29,17 +32,22 @@ public class Robot extends TimedRobot {
         digOut0 = new DigitalOutput(0);
         digOut0.setPWMRate(1000);
         digOut0.enablePWM(0.5);
-        displayDriver = new Marquee(DisplayConnectionFactory.usbConnection());
+        DisplayConnection displayConnection = DisplayConnectionFactory.usbConnection();
+        //displayDriver = new Marquee(DisplayConnectionFactory.usbConnection());
         //marquee
-        if (displayDriver != null) {
-            displayDriver.robotPeriodic();
-        }
+        //displayDriver.robotPeriodic();
+        
+        //display sponsors
+        displaySponsors = new DisplaySponsors(Sponsors.sponsorList, displayConnection);
+        displaySponsors.init();
+        
     }
 
     @Override
     public void robotPeriodic() {
         
         CommandScheduler.getInstance().run();
+        displaySponsors.robotPeriodic();
    
     }
 
