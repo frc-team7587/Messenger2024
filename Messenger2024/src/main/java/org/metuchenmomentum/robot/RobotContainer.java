@@ -123,7 +123,9 @@ public class RobotContainer {
 
         // Left Bumper: button loads the note in the shooter so the notes doesn't touch the shooter wheels
         operatorController.start().negate().and(operatorController.leftBumper()).toggleOnTrue(
-            new SequentialCommandGroup(      
+            new SequentialCommandGroup(
+                intake.turnToShooter().alongWith(shooter.turnToHandoff()).withTimeout(.2),
+                intake.intakeIn().withTimeout(.2),      
                 intake.releaseNoteManual().withTimeout(.5)
                 .alongWith(shooter.loadNote()).withTimeout(.5),
                 intake.turnToNeutral().withTimeout(.1),
