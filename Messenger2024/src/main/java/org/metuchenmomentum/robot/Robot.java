@@ -1,11 +1,16 @@
 package org.metuchenmomentum.robot;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import java.util.Optional;
+
 import org.metuchenmomentum.robot.subsystems.marquee.*;
 
 public class Robot extends TimedRobot {
@@ -38,8 +43,17 @@ public class Robot extends TimedRobot {
         //displayDriver.robotPeriodic();
         
         //display sponsors
-        displaySponsors = new DisplaySponsors(Sponsors.sponsorList, displayConnection);
-        displaySponsors.init();
+        Optional<Alliance> ally = DriverStation.getAlliance();
+          if (ally.get() == Alliance.Red){
+            Sponsors sponsors = new Sponsors("Red");
+           displaySponsors = new DisplaySponsors(sponsors.getList(), displayConnection, "Go Red!!!");
+            displaySponsors.init();
+          }
+          if (ally.get() == Alliance.Blue) {
+            Sponsors sponsors = new Sponsors("Blue");
+            displaySponsors = new DisplaySponsors(sponsors.getList(), displayConnection, "Go Blue!!!");
+            displaySponsors.init();
+          }
         
     }
 

@@ -24,11 +24,12 @@ public class DisplaySponsors {
     private final DisplayConnection displayConnection;
     private int messageIndex = 0;
     private int tickCount = 0;
-        
+    private String allianceColor = "";
 
-    public DisplaySponsors(List<DisplayMessage> sponsors, DisplayConnection displayConnection) {
+    public DisplaySponsors(List<DisplayMessage> sponsors, DisplayConnection displayConnection, String allianceColor) {
         this.sponsors = sponsors;
         this.displayConnection = displayConnection;
+        this.allianceColor = allianceColor;
     }
 
     public void init() {
@@ -40,8 +41,8 @@ public class DisplaySponsors {
      * that is, every 20 milliseconds.
      */
     public void robotPeriodic() {
-       //move on to the next sponsor every 5 seconds (25 ticks)
-       tickCount = (tickCount + 1) % 250;
+       //move on to the next sponsor every 7 seconds (35 ticks)
+       tickCount = (tickCount + 1) % 500;
         if (tickCount == 0) {
             displayCurrentSponsor();
         }
