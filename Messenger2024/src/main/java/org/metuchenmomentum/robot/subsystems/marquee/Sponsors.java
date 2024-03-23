@@ -17,9 +17,11 @@ public class Sponsors extends SubsystemBase {
         this.allianceColor = alliance;
         if (alliance.contains("Blue")) {
             this.acB = 250;
+            allianceColor = "Go Blue!!!";
         }
         if (alliance.contains("Red")) {
             this.acR = 250;
+            allianceColor = "Go Red!!!";
         }
         //custom message
         sponsorList.add(new DisplayMessage()
@@ -100,7 +102,7 @@ public class Sponsors extends SubsystemBase {
         //sponsor 7
         sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
-                    .setText("B⋅P⋅O⋅E")
+                    .setText("B.P.O.E")
                     .setForegroundRed(10)
                     .setForegroundGreen(60)
                     .setForegroundBlue(250)
