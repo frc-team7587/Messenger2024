@@ -5,8 +5,8 @@
 package org.metuchenmomentum.robot;
 
 import org.metuchenmomentum.robot.Constants.IOConstants;
-import org.metuchenmomentum.robot.subsystems.climber.Climber;
-import org.metuchenmomentum.robot.subsystems.climber.ClimberSparkMax;
+//import org.metuchenmomentum.robot.subsystems.climber.Climber;
+// import org.metuchenmomentum.robot.subsystems.climber.ClimberSparkMax;
 import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
 import org.metuchenmomentum.robot.subsystems.intake.Intake;
 import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
@@ -21,7 +21,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+//import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,7 +31,7 @@ public class RobotContainer {
     private final SwerveDrive drivetrain = new SwerveDrive();
     private final Intake intake = new Intake(new IntakeSparkMax());
     private final Shooter shooter = new Shooter(new ShooterSparkMax());
-    private final Climber climber = new Climber(new ClimberSparkMax());
+   // private final Climber climber = new Climber(new ClimberSparkMax());
 
     CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
     CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
@@ -65,7 +65,7 @@ public class RobotContainer {
         
         /** TELEOPERATED TRIGGERS */
 
-        // Climber Controls
+      /*  // Climber Controls
          operatorController.start().negate().and(operatorController.b()).toggleOnTrue(
              new SequentialCommandGroup(
                 // shooter.resetPosition().withTimeout(0),
@@ -84,6 +84,7 @@ public class RobotContainer {
              new SequentialCommandGroup(
                  climber.stopLeftHook().withTimeout(0),
                  climber.stopRightHook()));
+                 */
         // A: turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(
             shooter.stopShooter().withTimeout(0).andThen(shooter.stopIndexer().withTimeout(0)).andThen(intake.intakeNote()));
