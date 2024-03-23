@@ -96,7 +96,13 @@ public class RobotContainer {
                 .withTimeout(0)
                 .andThen(intake.turnToShooter())
         );
-
+        operatorController.start().negate().and(operatorController.b()).toggleOnTrue(
+        shooter.prepareSpeakerPosition().withTimeout(.2)
+        .andThen(shooter.takeBackALittleBitShooter())
+        );
+        operatorController.start().negate().and(operatorController.b()).toggleOnFalse(
+shooter.stopShooter()
+        );
         // Right Trigger: starts the speaker scoring sequence
         operatorController.start().negate().and(operatorController.rightTrigger()).toggleOnTrue(
             shooter.prepareSpeakerPosition().withTimeout(.1)
@@ -197,7 +203,7 @@ public class RobotContainer {
     }   
     
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("3-Note Auto");
+        return new PathPlannerAuto("Shoot Only");
     }
 
     // public Command autonomousLowerClimber() {

@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
         autonomousCommand = robotContainer.getAutonomousCommand();
         //marquee
         m_autoSelected = m_chooser.getSelected();
-
+        //displayDriver.autonomousInit();
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        //marquee
+        /*/marquee PLEASE DONT TOUCH COMMENTED OUT CODE
         switch (m_autoSelected) {
             case kCustomAuto:
                 displayDriver.autonomousPeriodic();
@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
             case kDefaultAuto:
                 displayDriver.autonomousPeriodic();
                 break;
-        }
+        }*/
     }
 
     @Override

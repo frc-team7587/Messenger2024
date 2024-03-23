@@ -64,7 +64,7 @@ public class Marquee {
           }
         
     }
-    public void autonomousPeriodic() {
+    public void autonomousInit() {
       DisplayMessage smoothCrawl = new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
                     .setText("auto > driver")
@@ -72,7 +72,7 @@ public class Marquee {
                     .setForegroundGreen(69)
                     .setForegroundBlue(0)
                     .setDelay1(40);
-                displayConnection.send(smoothCrawl);
+                
     }
 
   private void blueTextCrawl(){
