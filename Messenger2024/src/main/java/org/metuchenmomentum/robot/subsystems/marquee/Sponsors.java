@@ -17,11 +17,11 @@ public class Sponsors extends SubsystemBase {
         this.allianceColor = alliance;
         if (alliance.contains("Blue")) {
             this.acB = 250;
-            allianceColor = "Go Blue!!!";
+            allianceColor = "Go Alliance #!!!";
         }
         if (alliance.contains("Red")) {
             this.acR = 250;
-            allianceColor = "Go Red!!!";
+            allianceColor = "Go Alliance #!!!";
         }
         //custom message
         sponsorList.add(new DisplayMessage()
@@ -71,7 +71,7 @@ public class Sponsors extends SubsystemBase {
                     .setBackgroundBlue(1)
                     .setDelay1(40));
         //sponsor 3
-        sponsorList.add(new DisplayMessage()
+       /*  sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
                     .setText("J*Star Research Inc.")
                     .setForegroundRed(72)
@@ -81,6 +81,7 @@ public class Sponsors extends SubsystemBase {
                     .setBackgroundGreen(1)
                     .setBackgroundBlue(1)
                     .setDelay1(40));
+                    */
         //sponsor 4
         sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
@@ -93,7 +94,7 @@ public class Sponsors extends SubsystemBase {
                     .setBackgroundBlue(1)
                     .setDelay1(40));
         //sponsor 5
-        sponsorList.add(new DisplayMessage()
+        /*sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
                     .setText("NOKIA Bell Labs")
                     .setForegroundRed(25)
@@ -102,7 +103,7 @@ public class Sponsors extends SubsystemBase {
                     .setBackgroundRed(1)
                     .setBackgroundGreen(1)
                     .setBackgroundBlue(1)
-                    .setDelay1(40));
+                    .setDelay1(40)); */
         //sponsor 6
         sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
@@ -115,7 +116,7 @@ public class Sponsors extends SubsystemBase {
                     .setBackgroundBlue(1)
                     .setDelay1(40));
         //sponsor 7
-        sponsorList.add(new DisplayMessage()
+        /* sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
                     .setText("B.P.O.E")
                     .setForegroundRed(10)
@@ -124,7 +125,7 @@ public class Sponsors extends SubsystemBase {
                     .setBackgroundRed(1)
                     .setBackgroundGreen(1)
                     .setBackgroundBlue(1)
-                    .setDelay1(40));
+                    .setDelay1(40)); */ 
         //sponsor 8
         sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
@@ -150,7 +151,7 @@ public class Sponsors extends SubsystemBase {
         //sponsor 9
         sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
-                    .setText("Elks Lodge")
+                    .setText("Metuchen Elks Lodge #1914")
                     .setForegroundRed(155)
                     .setForegroundGreen(69)
                     .setForegroundBlue(0)
@@ -228,16 +229,6 @@ public class Sponsors extends SubsystemBase {
         sponsorList.add(new DisplayMessage()
                     .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
                     .setText("Mr.Fuentes <3")
-                    .setForegroundRed(175)
-                    .setForegroundGreen(30)
-                    .setForegroundBlue(0)
-                    .setBackgroundRed(1)
-                    .setBackgroundGreen(1)
-                    .setBackgroundBlue(1)
-                    .setDelay1(40));
-        sponsorList.add(new DisplayMessage()
-                    .setDisplayCommand(DisplayCommand.TEXT_CRAWL)
-                    .setText("UWU Richard OVO <3")
                     .setForegroundRed(175)
                     .setForegroundGreen(30)
                     .setForegroundBlue(0)
