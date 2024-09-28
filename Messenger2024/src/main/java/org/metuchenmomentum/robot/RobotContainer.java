@@ -136,7 +136,7 @@ shooter.stopShooter()
                 intake.releaseNoteManual().withTimeout(.5)
                 .alongWith(shooter.loadNote()).withTimeout(.75),
                 intake.turnToNeutral().withTimeout(.1),
-                shooter.takeBackALittleBitShooter().withTimeout(.2).andThen(shooter.stopShooter()),
+                shooter.takeBackALittleBitShooter().withTimeout(0.1).alongWith(shooter.takeBackALittleBitIndexer()).withTimeout(.2).andThen(shooter.stopShooter()),
                 shooter.stopIndexer(),
                 intake.stopIntake(),
                 shooter.stopShooter()
