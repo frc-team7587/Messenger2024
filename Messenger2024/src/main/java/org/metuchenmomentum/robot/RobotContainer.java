@@ -5,14 +5,11 @@
 package org.metuchenmomentum.robot;
 
 import org.metuchenmomentum.robot.Constants.IOConstants;
-//import org.metuchenmomentum.robot.subsystems.climber.Climber;
-// import org.metuchenmomentum.robot.subsystems.climber.ClimberSparkMax;
 import org.metuchenmomentum.robot.subsystems.drive.SwerveDrive;
 import org.metuchenmomentum.robot.subsystems.intake.Intake;
 import org.metuchenmomentum.robot.subsystems.intake.IntakeSparkMax;
 import org.metuchenmomentum.robot.subsystems.shooter.Shooter;
 import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
-
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -21,7 +18,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-//import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -203,7 +199,7 @@ shooter.stopShooter()
     }   
     
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Shoot Only");
+        return new PathPlannerAuto("Leave Right");
     }
 
     // public Command autonomousLowerClimber() {
