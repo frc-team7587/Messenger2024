@@ -14,6 +14,14 @@ import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 
 public class RobotContainer {
     //subsystems
@@ -23,8 +31,8 @@ public class RobotContainer {
     // private final Climber climber = new Climber(new ClimberSparkMax());
 
     //controllers
-    CommandXboxController driverController = new CommandXboxController(IOConstants.kDriverControllerPort);
-    CommandXboxController operatorController = new CommandXboxController(IOConstants.kOperatorControllerPort);
+    XboxController driverController = new XboxController(IOConstants.kDriverControllerPort);
+    XboxController operatorController = new XboxController(IOConstants.kOperatorControllerPort);
 
     //cameras
     UsbCamera camera = CameraServer.startAutomaticCapture();
@@ -32,9 +40,9 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
-        NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
-        NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
+       // NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
+        //NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
+      //  NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
         // NamedCommands.registerCommand("Lower Climbers", autonomousLowerClimber());
     }
 
@@ -76,6 +84,8 @@ public class RobotContainer {
                  climber.stopLeftHook().withTimeout(0),
                  climber.stopRightHook()));
                  */
+
+        /* 
         // A: turns the intake to the ground and runs the rollers to intake the note, clicking again stops the intake
         operatorController.start().negate().and(operatorController.a()).toggleOnTrue(
             shooter.stopShooter().withTimeout(0).andThen(shooter.stopIndexer().withTimeout(0)).andThen(intake.intakeNote()));
@@ -142,7 +152,7 @@ shooter.stopShooter()
         // Left Trigger: starts the amp scoring sequence
         operatorController.start().negate().and(operatorController.leftTrigger()).toggleOnTrue(shooter.amplify());
     
-        /** Full-Manual Mode enabled by holding the start button, commands are self-explanatory */
+        /** Full-Manual Mode enabled by holding the start button, commands are self-explanatory *
         operatorController.start().and(operatorController.b())
             .whileTrue(shooter.pivotUp());
 
@@ -190,7 +200,7 @@ shooter.stopShooter()
 
         operatorController.start().and(operatorController.povDown())
             .toggleOnFalse(shooter.stopIndexer());
-    
+    */
     }   
     
     public Command getAutonomousCommand() {
