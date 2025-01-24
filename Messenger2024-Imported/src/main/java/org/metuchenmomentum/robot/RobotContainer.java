@@ -32,7 +32,7 @@ public class RobotContainer {
 
     //controllers
     XboxController driverController = new XboxController(IOConstants.kDriverControllerPort);
-    XboxController operatorController = new XboxController(IOConstants.kOperatorControllerPort);
+  //  XboxController operatorController = new XboxController(IOConstants.kOperatorControllerPort);
 
     //cameras
     UsbCamera camera = CameraServer.startAutomaticCapture();
