@@ -92,6 +92,7 @@ public class SwerveDrive extends SubsystemBase {
         PIDConstants rotationPID = new PIDConstants(DriveConstants.kTurnAngleP, DriveConstants.kTurnAngleI, DriveConstants.kTurnAngleD);
 
     // Configure AutoBuilder for PathPlanner
+    /* 
     AutoBuilder.configure(
         this::getPose, // Robot pose supplier
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -100,7 +101,7 @@ public class SwerveDrive extends SubsystemBase {
                 getModuleStates()), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (speeds, feedforwards) ->
             driveRobotRelative(
-                speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.
+                speeds), // Method that will drive the robot give-n ROBOT RELATIVE ChassisSpeeds.
         // Also optionally outputs individual module feedforwards
         new PPHolonomicDriveController( // PPHolonomicController is the built in path following
             // controller for holonomic drive trains
@@ -121,8 +122,9 @@ public class SwerveDrive extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
         );
-        
+        */
     }
+        
 
     /**
      * Drives the robot.

@@ -31,9 +31,9 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         robotContainer = new RobotContainer();
         //marquee
-        m_chooser.setDefaultOption("Default Auto", kDefaultAuto); 
-        m_chooser.addOption("My Auto", kCustomAuto);
-        SmartDashboard.putData("Auto choices", m_chooser);
+       // m_chooser.setDefaultOption("Default Auto", kDefaultAuto); 
+      //  m_chooser.addOption("My Auto", kCustomAuto);
+      //  SmartDashboard.putData("Auto choices", m_chooser);
         digOut0 = new DigitalOutput(0);
         digOut0.setPWMRate(1000);
         digOut0.enablePWM(0.5);
@@ -82,6 +82,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        /*
         autonomousCommand = robotContainer.getAutonomousCommand();
         //marquee
         m_autoSelected = m_chooser.getSelected();
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
+            */
     }
 
     @Override
