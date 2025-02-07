@@ -47,17 +47,13 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+        teleopPeriodic();
 
        // NamedCommands.registerCommand("Intake Note", autonomousIntakeNote());
         //NamedCommands.registerCommand("Handoff Note", autonomousHandoffNote());
       //  NamedCommands.registerCommand("Shoot Note", autonomousShootNote());
         // NamedCommands.registerCommand("Lower Climbers", autonomousLowerClimber());
     }
-
-  public void autonomousPeriodic() {
-    drive(false);
-    drivetrain.updateOdometry();
-  }
 
 
   public void teleopPeriodic() {
