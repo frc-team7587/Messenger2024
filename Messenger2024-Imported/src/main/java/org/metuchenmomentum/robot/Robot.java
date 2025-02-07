@@ -25,6 +25,7 @@ public class Robot extends TimedRobot {
     private DigitalOutput digOut0;
     //display sponsors
     private DisplaySponsors displaySponsors;
+    public static double getPeriod;
     
 
     @Override
@@ -62,6 +63,7 @@ public class Robot extends TimedRobot {
         
         CommandScheduler.getInstance().run();
         displaySponsors.robotPeriodic();
+        getPeriod = this.getPeriod();
    
     }
 

@@ -79,17 +79,11 @@ public class SwerveDrive extends SubsystemBase {
     
 
     public SwerveDrive() {
+
+        gyro.reset();
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
 
-        try {
-            config = RobotConfig.fromGUISettings();
-          } catch (Exception e) {
-            e.printStackTrace();
-        }
-      
-        PIDConstants translationPID = new PIDConstants(DriveConstants.kTranslationP, DriveConstants.kTranslationI, DriveConstants.kTranslationD);
-        PIDConstants rotationPID = new PIDConstants(DriveConstants.kTurnAngleP, DriveConstants.kTurnAngleI, DriveConstants.kTurnAngleD);
 
     // Configure AutoBuilder for PathPlanner
     /* 
@@ -127,85 +121,36 @@ public class SwerveDrive extends SubsystemBase {
         
 
     /**
-     * Drives the robot.
-     * @param xSpeed                    The input speed of the robot in the x direction (forwards).
-     * @param ySpeed                    The input speed of the robot in the y direction (sideways).
-     * @param rotation                  The input rotational speed of the robot.
-     * @param isFieldRelative           Whether the provided x and y speeds are relative to the field.
-     * @param isRateLimitingEnabled     Whether to enable rate limiting for smoother control.
-     */
-    public void drive(double xSpeed, double ySpeed, double rotation, boolean isFieldRelative, boolean isRateLimitingEnabled) {
-        double xSpeedCommand;
-        double ySpeedCommand;
+   * Method to drive the robot using joystick info.
+   *
+   * @param xSpeed Speed of the robot in the x direction (forward).
+   * @param ySpeed Speed of the robot in the y direction (sideways).
+   * @param rot Angular rate of the robot.
+   * @param fieldRelative Whether the provided x and y speeds are relative to the field.
+   */
+  public void drive(
+    double xSpeed, double ySpeed, double rot, boolean fieldRelative, double periodSeconds) {
+  var swerveModuleStates =
+      DriveConstants.kDriveKinematics.toSwerveModuleStates(
+          ChassisSpeeds.discretize(
+              fieldRelative
+                  ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                      xSpeed, ySpeed, rot, gyro.getRotation2d())
+                  : new ChassisSpeeds(xSpeed, ySpeed, rot),
+              periodSeconds));
+  SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeed);
+  frontLeftModule.setDesiredState(swerveModuleStates[0]);
+  frontRightModule.setDesiredState(swerveModuleStates[1]);
+  rearLeftModule.setDesiredState(swerveModuleStates[2]);
+  rearRightModule.setDesiredState(swerveModuleStates[3]);
+}
 
-        // This rate-limiting algorithm is provided by REV for the MAXSwerve modules.
-        if (isRateLimitingEnabled) {
-            double inputTranslationDirection = Math.atan2(ySpeed, xSpeed);
-            double inputTranslationMagnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
-
-            double directionSlewRate;
-            if (currentTranslationMagnitude != 0.0) {
-                directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / currentTranslationMagnitude);
-            } else {
-                directionSlewRate = 500.0;
-            }
-
-            double currentTime = WPIUtilJNI.now() * 1e-6;
-            double elapsedTime = currentTime - previousTime;
-            double angleDifference = SwerveUtils.angleDifference(inputTranslationDirection, currentTranslationDirection);
-
-            if (angleDifference < 0.45 * Math.PI) {
-                currentTranslationDirection = SwerveUtils.stepTowardsCircular(
-                    currentTranslationDirection,
-                    inputTranslationDirection,
-                    directionSlewRate * elapsedTime
-                );
-                currentTranslationMagnitude = magnitudeLimiter.calculate(inputTranslationMagnitude);
-            } else if (angleDifference > 0.85 * Math.PI) {
-                if (currentTranslationMagnitude > 1e-4) {
-                    currentTranslationMagnitude = magnitudeLimiter.calculate(0.0);
-                } else {
-                    currentTranslationDirection = SwerveUtils.wrapAngle(currentTranslationDirection + Math.PI);
-                    currentTranslationMagnitude = magnitudeLimiter.calculate(inputTranslationMagnitude);
-                }
-            } else {
-                currentTranslationDirection = SwerveUtils.stepTowardsCircular(
-                    currentTranslationDirection,
-                    inputTranslationDirection,
-                    directionSlewRate * elapsedTime
-                );
-                currentTranslationMagnitude = magnitudeLimiter.calculate(0.0);
-            }
-            previousTime = currentTime;
-
-            xSpeedCommand = currentTranslationMagnitude * Math.cos(currentTranslationDirection);
-            ySpeedCommand = currentTranslationMagnitude * Math.sin(currentTranslationDirection);
-            currentRotation = rotationLimiter.calculate(rotation);
-
-        } else {
-            xSpeedCommand = xSpeed;
-            ySpeedCommand = ySpeed;
-            currentRotation = rotation;
-        }
-
-        double xSpeedDelivered = xSpeedCommand * DriveConstants.kMaxSpeed;
-        double ySpeedDelivered = ySpeedCommand * DriveConstants.kMaxSpeed;
-        double rotationDelivered = currentRotation * DriveConstants.kMaxAngularSpeed;
-
-        SwerveModuleState[] desiredStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            isFieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotationDelivered, getRotation())
-                : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotationDelivered));
-        
-        setModuleStates(desiredStates);
-    }
-
-    public void driveRobotRelative(ChassisSpeeds speeds) {
-        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
-
-        SwerveModuleState[] targetStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
-        setModuleStates(targetStates);
-    }
+    /** Updates the field relative position of the robot. */
+  public void updateOdometry() {
+    odometry.update(
+        getRotation(),
+        getModulePositions());
+  }
 
 
     @Override
