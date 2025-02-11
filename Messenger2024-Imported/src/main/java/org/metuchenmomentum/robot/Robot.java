@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.metuchenmomentum.robot.Constants.DriveConstants;
@@ -110,7 +111,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        drive(false);
+        drive(true);
         m_swerve.updateOdometry();
         /*/marquee PLEASE DONT TOUCH COMMENTED OUT CODE
         switch (m_autoSelected) {
@@ -151,7 +152,7 @@ public class Robot extends TimedRobot {
     // if it is too high, the robot will oscillate.
     // if it is too low, the robot will never reach its target
     // if the robot never turns in the correct direction, kP should be inverted.
-    double kP = .035;
+    double kP = .015;
 
     // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the rightmost edge of 
     // your limelight 3 feed, tx should return roughly 31 degrees.
@@ -171,25 +172,61 @@ public class Robot extends TimedRobot {
   // if your limelight and target are mounted at the same or similar heights, use "ta" (area) for target ranging rather than "ty"
   double limelight_range_proportional()
   {    
-    double kP = .1;
-    double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
+    double kP = 0.5;
+    double targetingForwardSpeed = LimelightHelpers.getTA("limelight") * kP;
     targetingForwardSpeed *= DriveConstants.kMaxSpeed;
     targetingForwardSpeed *= -1.0;
     return targetingForwardSpeed;
   }
 
+  double limelight_distance(){
+    double limelightMountAngleDegrees = 3.3;
+    double limelightLensHeightInches = 9;
+    double goalHeightInches = 13;
+    double kP = 0.05;
+
+    double targetOffSetAngle_Vertical = LimelightHelpers.getTY("limelight");
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffSetAngle_Vertical;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    double distanceFromLimelighToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+
+    double targetingForwardSpeed = distanceFromLimelighToGoalInches * kP;
+    targetingForwardSpeed *= DriveConstants.kMaxSpeed;
+    targetingForwardSpeed *= -1.0;
+    return targetingForwardSpeed;
+
+
+
+  }
+
+  ArrayList limelight_aimAndrange_proportional()
+  {
+
+    ArrayList<Double> targetingVars = new ArrayList<Double>();
+    double kPaim = 0.01;
+    double kPdistance = 0.05;
+
+    double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kPaim;
+    double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kPdistance;
+    targetingVars.add(targetingAngularVelocity);
+    targetingVars.add(targetingForwardSpeed);
+    return targetingVars;
+   }
+
   private void drive(boolean fieldRelative) {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
     var xSpeed =
-        -m_xspeedLimiter.calculate(MathUtil.applyDeadband(m_controller.getLeftY(), 0.02))
+        -m_xspeedLimiter.calculate(MathUtil.applyDeadband(m_controller.getLeftY(), 0.07))
             * DriveConstants.kMaxSpeed;
 
     // Get the y speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
     var ySpeed =
-        -m_yspeedLimiter.calculate(MathUtil.applyDeadband(m_controller.getLeftX(), 0.02))
+        -m_yspeedLimiter.calculate(MathUtil.applyDeadband(m_controller.getLeftX(), 0.07))
             * DriveConstants.kMaxSpeed;
 
     // Get the rate of angular rotation. We are inverting this because we want a
@@ -197,7 +234,7 @@ public class Robot extends TimedRobot {
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
     var rot =
-        -m_rotLimiter.calculate(MathUtil.applyDeadband(m_controller.getRightX(), 0.02))
+        -m_rotLimiter.calculate(MathUtil.applyDeadband(m_controller.getRightX(), 0.07))
             * DriveConstants.kMaxAngularSpeed;
 
     // while the A-button is pressed, overwrite some of the driving values with the output of our limelight methods
@@ -206,12 +243,35 @@ public class Robot extends TimedRobot {
         final var rot_limelight = limelight_aim_proportional();
         rot = rot_limelight;
 
-        final var forward_limelight = limelight_range_proportional();
-        xSpeed = forward_limelight;
+        final var forward_limelight = limelight_distance();
+        //xSpeed = forward_limelight;
 
-        //while using Limelight, turn off field-relative driving.
-        fieldRelative = false;
-    }
+        //whil
+    } 
+    /*if(m_controller.getAButton())
+    {
+    double kPaim = 0.01;
+    double kPdistance = 0.05;
+
+    double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kPaim;
+    double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kPdistance;
+      double min_aim_command = 0.05;
+      final var heading_error = -targetingAngularVelocity;
+      final var distance_error = -targetingForwardSpeed;
+      var steering_adjust = 0.0;
+
+      if (targetingAngularVelocity > 1.0) {
+        steering_adjust = kPaim * heading_error - min_aim_command;
+      } else if (targetingAngularVelocity < -1.0)
+      {
+        steering_adjust = kPaim * heading_error + min_aim_command;
+      }
+
+      final var distance_adjust = kPdistance * distance_error;
+      xSpeed += steering_adjust + distance_adjust;
+
+    }*/
+
 
     m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative, getPeriod());
    }

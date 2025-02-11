@@ -68,19 +68,14 @@ public class SwerveDrive extends SubsystemBase {
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
        // DriveConstants.kDriveKinematics, getRotation(), getModulePositions()
        DriveConstants.kDriveKinematics,
-       Rotation2d.fromDegrees(gyro.getAngle()),
-       new SwerveModulePosition[] {
-           frontLeftModule.getPosition(),
-           frontRightModule.getPosition(),
-           rearLeftModule.getPosition(),
-           rearRightModule.getPosition()
-       })
+       getRotation(),
+       getModulePositions())
     ;
     
 
     public SwerveDrive() {
 
-        gyro.reset();
+        
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
 

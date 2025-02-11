@@ -29,8 +29,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class RobotContainer {
     //subsystems
    // private final SwerveDrive drivetrain = new SwerveDrive();
-    private final Intake intake = new Intake(new IntakeSparkMax());
-    private final Shooter shooter = new Shooter(new ShooterSparkMax());
+   // private final Intake intake = new Intake(new IntakeSparkMax());
+    //private final Shooter shooter = new Shooter(new ShooterSparkMax());
     // private final Climber climber = new Climber(new ClimberSparkMax());
 
     // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
@@ -222,7 +222,7 @@ shooter.stopShooter()
     //     return climber.lowerLeftHook().withTimeout(0).andThen(climber.lowerRightHook()).withTimeout(3);
     // }
 
-    public Command autonomousIntakeNote() {
+    /*public Command autonomousIntakeNote() {
         return intake.intakeNote().withTimeout(2)
             .andThen(intake.turnToShooter().withTimeout(0.5))
             .andThen(intake.stopIntake().withTimeout(0));
@@ -250,5 +250,5 @@ shooter.stopShooter()
             shooter.stopIndexer().withTimeout(0),
             intake.stopIntake().withTimeout(0)
         );
-    }
+    }*/
 }
