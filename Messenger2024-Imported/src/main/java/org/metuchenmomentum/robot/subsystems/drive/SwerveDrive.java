@@ -78,10 +78,9 @@ public class SwerveDrive extends SubsystemBase {
         
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
 
+        
 
-
-    // Configure AutoBuilder for PathPlanner
-    /* 
+    /*/ Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
         this::getPose, // Robot pose supplier
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -146,6 +145,8 @@ public class SwerveDrive extends SubsystemBase {
         getRotation(),
         getModulePositions());
   }
+  
+   
 
 
     @Override

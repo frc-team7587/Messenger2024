@@ -201,19 +201,33 @@ public class Robot extends TimedRobot {
 
   }
 
-  ArrayList limelight_aimAndrange_proportional()
-  {
+  double[] limelight_align_and_range() {
+    // Constants for proportional control
+    double kP_Aim = 0.015;   // Aiming proportional gain (tx)
+    double kP_Align = 0.02;  // Alignment proportional gain (ty)
+    double kP_Range = 0.1;   // Distance proportional gain (ta)
 
-    ArrayList<Double> targetingVars = new ArrayList<Double>();
-    double kPaim = 0.01;
-    double kPdistance = 0.05;
+    // Get Limelight data
+    double tx = LimelightHelpers.getTX("limelight");  // Horizontal offset
+    double ty = LimelightHelpers.getTY("limelight");  // Vertical offset
+    double ta = LimelightHelpers.getTA("limelight");  // Target area
 
-    double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kPaim;
-    double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kPdistance;
-    targetingVars.add(targetingAngularVelocity);
-    targetingVars.add(targetingForwardSpeed);
-    return targetingVars;
-   }
+    // Calculate angular velocity for aiming
+    double aimingRot = -tx * kP_Aim * DriveConstants.kMaxAngularSpeed;
+
+    // Desired area (distance goal) - This should be tuned based on real-world measurements
+    double desiredArea = 5.0;  // Example: adjust based on desired distance
+    double distanceError = desiredArea - ta;
+
+    // Forward/backward speed for maintaining distance
+    double forwardSpeed = distanceError * kP_Range * DriveConstants.kMaxSpeed;
+
+    // Strafe speed for aligning parallel
+    double strafeSpeed = -ty * kP_Align * DriveConstants.kMaxSpeed;
+
+    // Return an array of values
+    return new double[]{forwardSpeed, strafeSpeed, aimingRot};
+}
 
   private void drive(boolean fieldRelative) {
     // Get the x speed. We are inverting this because Xbox controllers return
@@ -245,9 +259,14 @@ public class Robot extends TimedRobot {
 
         final var forward_limelight = limelight_distance();
         //xSpeed = forward_limelight;
-
-        //whil
     } 
+    // Override manual control when A button is pressed
+    if (m_controller.getBButton()) {
+      double[] limelightOutputs = limelight_align_and_range();
+      xSpeed = limelightOutputs[0]; // Forward/backward
+      ySpeed = limelightOutputs[1]; // Sideways alignment
+      rot = limelightOutputs[2];    // Rotation
+  }
     /*if(m_controller.getAButton())
     {
     double kPaim = 0.01;
