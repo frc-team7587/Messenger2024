@@ -268,6 +268,13 @@ public class Robot extends TimedRobot {
       xSpeed = limelightOutputs[0]; // Forward/backward
       ySpeed = limelightOutputs[1]; // Sideways alignment
       //rot = limelightOutputs[2];    // Rotation
+
+      // Check if the robot is relatively aligned before applying rotation
+      if (Math.abs(xSpeed) < 0.1 && Math.abs(ySpeed) < 0.1) {
+        rot = limelightOutputs[2];    // Rotation
+    } else {
+        rot = 0; // No rotation until aligned
+    }
   }
     /*if(m_controller.getAButton())
     {
