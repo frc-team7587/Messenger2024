@@ -205,25 +205,27 @@ public class Robot extends TimedRobot {
     // Constants for proportional control
     double kP_Aim = 0.025;   // Aiming proportional gain (tx)
     double kP_Align = 0.02;  // Alignment proportional gain (ty)
-    double kP_Range = 0.25;   // Distance proportional gain (ta)
+    double kP_Range = 0.05;   // Distance proportional gain (ta)
 
     // Get Limelight data
     double tx = LimelightHelpers.getTX("limelight");  // Horizontal offset
     double ty = LimelightHelpers.getTY("limelight");  // Vertical offset
     double ta = LimelightHelpers.getTA("limelight");  // Target area
+    double targetYaw = LimelightHelpers.getBotPose("limelight")[5];
+    double currentYaw = m_swerve.getRobotYaw();
 
     // Calculate angular velocity for aiming
-    double aimingRot = -tx * kP_Aim * DriveConstants.kMaxAngularSpeed;
+    double aimingRot = tx * kP_Aim * DriveConstants.kMaxAngularSpeed;
 
     // Desired area (distance goal) - This should be tuned based on real-world measurements
-    double desiredArea = 1.5;  // Example: adjust based on desired distance
+    double desiredArea = 4.5;  // Example: adjust based on desired distance
     double distanceError = desiredArea - ta;
 
     // Forward/backward speed for maintaining distance
     double forwardSpeed = distanceError * kP_Range * DriveConstants.kMaxSpeed;
 
     // Strafe speed for aligning parallel
-    double strafeSpeed = -ty * kP_Align * DriveConstants.kMaxSpeed;
+    double strafeSpeed = -tx * kP_Align * DriveConstants.kMaxSpeed;
 
     // Return an array of values
     return new double[]{forwardSpeed, strafeSpeed, aimingRot};
@@ -261,11 +263,11 @@ public class Robot extends TimedRobot {
         xSpeed = forward_limelight;
     } 
     // Override manual control when A button is pressed
-    if (m_controller.getBButton()&& LimelightHelpers.getFiducialID("limelight") == 2 ) {
+    if (m_controller.getBButton()&& LimelightHelpers.getFiducialID("limelight") == 21 ) {
       double[] limelightOutputs = limelight_align_and_range();
       xSpeed = limelightOutputs[0]; // Forward/backward
-      //ySpeed = limelightOutputs[1]; // Sideways alignment
-      rot = limelightOutputs[2];    // Rotation
+      ySpeed = limelightOutputs[1]; // Sideways alignment
+      //rot = limelightOutputs[2];    // Rotation
   }
     /*if(m_controller.getAButton())
     {

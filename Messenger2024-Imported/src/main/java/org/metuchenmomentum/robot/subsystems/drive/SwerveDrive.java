@@ -241,4 +241,8 @@ public class SwerveDrive extends SubsystemBase {
     public void resetHeading() {
         gyro.reset();
     }
+
+    public double getRobotYaw(){
+        return gyro.getYaw();
+    }
 }
