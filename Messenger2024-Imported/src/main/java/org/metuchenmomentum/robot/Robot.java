@@ -203,9 +203,9 @@ public class Robot extends TimedRobot {
 
   double[] limelight_align_and_range() {
     // Constants for proportional control
-    double kP_Aim = 0.015;   // Aiming proportional gain (tx)
+    double kP_Aim = 0.025;   // Aiming proportional gain (tx)
     double kP_Align = 0.02;  // Alignment proportional gain (ty)
-    double kP_Range = 0.5;   // Distance proportional gain (ta)
+    double kP_Range = 0.25;   // Distance proportional gain (ta)
 
     // Get Limelight data
     double tx = LimelightHelpers.getTX("limelight");  // Horizontal offset
@@ -216,7 +216,7 @@ public class Robot extends TimedRobot {
     double aimingRot = -tx * kP_Aim * DriveConstants.kMaxAngularSpeed;
 
     // Desired area (distance goal) - This should be tuned based on real-world measurements
-    double desiredArea = 1.0;  // Example: adjust based on desired distance
+    double desiredArea = 1.5;  // Example: adjust based on desired distance
     double distanceError = desiredArea - ta;
 
     // Forward/backward speed for maintaining distance
@@ -252,16 +252,16 @@ public class Robot extends TimedRobot {
             * DriveConstants.kMaxAngularSpeed;
 
     // while the A-button is pressed, overwrite some of the driving values with the output of our limelight methods
-    if(m_controller.getAButton())
+    if(m_controller.getAButton() && LimelightHelpers.getFiducialID("limelight") == 2)
     {
         final var rot_limelight = limelight_aim_proportional();
         rot = rot_limelight;
 
-        final var forward_limelight = limelight_distance();
-        //xSpeed = forward_limelight;
+        final var forward_limelight = limelight_range_proportional();
+        xSpeed = forward_limelight;
     } 
     // Override manual control when A button is pressed
-    if (m_controller.getBButton()) {
+    if (m_controller.getBButton()&& LimelightHelpers.getFiducialID("limelight") == 2 ) {
       double[] limelightOutputs = limelight_align_and_range();
       xSpeed = limelightOutputs[0]; // Forward/backward
       //ySpeed = limelightOutputs[1]; // Sideways alignment
