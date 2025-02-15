@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    drive(true);
+    drive(false);
   }
 
   // simple proportional turning control with Limelight.
@@ -205,7 +205,7 @@ public class Robot extends TimedRobot {
     // Constants for proportional control
     double kP_Aim = 0.015;   // Aiming proportional gain (tx)
     double kP_Align = 0.02;  // Alignment proportional gain (ty)
-    double kP_Range = 0.1;   // Distance proportional gain (ta)
+    double kP_Range = 0.5;   // Distance proportional gain (ta)
 
     // Get Limelight data
     double tx = LimelightHelpers.getTX("limelight");  // Horizontal offset
@@ -216,7 +216,7 @@ public class Robot extends TimedRobot {
     double aimingRot = -tx * kP_Aim * DriveConstants.kMaxAngularSpeed;
 
     // Desired area (distance goal) - This should be tuned based on real-world measurements
-    double desiredArea = 5.0;  // Example: adjust based on desired distance
+    double desiredArea = 1.0;  // Example: adjust based on desired distance
     double distanceError = desiredArea - ta;
 
     // Forward/backward speed for maintaining distance
@@ -264,7 +264,7 @@ public class Robot extends TimedRobot {
     if (m_controller.getBButton()) {
       double[] limelightOutputs = limelight_align_and_range();
       xSpeed = limelightOutputs[0]; // Forward/backward
-      ySpeed = limelightOutputs[1]; // Sideways alignment
+      //ySpeed = limelightOutputs[1]; // Sideways alignment
       rot = limelightOutputs[2];    // Rotation
   }
     /*if(m_controller.getAButton())
