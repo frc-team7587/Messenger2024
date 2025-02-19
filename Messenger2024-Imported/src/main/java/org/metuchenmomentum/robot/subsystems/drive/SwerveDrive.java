@@ -80,21 +80,19 @@ public class SwerveDrive extends SubsystemBase {
 
         
 
-    /*/ Configure AutoBuilder for PathPlanner
+    // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
         this::getPose, // Robot pose supplier
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
         () ->
             DriveConstants.kDriveKinematics.toChassisSpeeds(
                 getModuleStates()), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        (speeds, feedforwards) ->
-            driveRobotRelative(
-                speeds), // Method that will drive the robot give-n ROBOT RELATIVE ChassisSpeeds.
+        (speeds, feedforwards) ->driveRobotRelative(speeds), // Method that will drive the robot give-n ROBOT RELATIVE ChassisSpeeds.
         // Also optionally outputs individual module feedforwards
         new PPHolonomicDriveController( // PPHolonomicController is the built in path following
             // controller for holonomic drive trains
-            translationPID, // Translation PID constants
-            rotationPID // Rotation PID constants
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
             ),
         config, // The robot configuration
         () -> {
@@ -110,7 +108,7 @@ public class SwerveDrive extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
         );
-        */
+        
     }
         
 
@@ -138,6 +136,24 @@ public class SwerveDrive extends SubsystemBase {
   rearLeftModule.setDesiredState(swerveModuleStates[2]);
   rearRightModule.setDesiredState(swerveModuleStates[3]);
 }
+
+/*
+ * Runs the drive at givne velocity relative to robot's rotation
+ * 
+ * @param speeds The speeds to run the modules at in meters per second.
+ */
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        //calculate module setpoints
+        ChassisSpeeds discretSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+        SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(discretSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxSpeed);
+
+        //send setpoints to modules
+        frontLeftModule.setDesiredState(moduleStates[0]);
+        frontRightModule.setDesiredState(moduleStates[1]);
+        rearLeftModule.setDesiredState(moduleStates[2]);
+        rearRightModule.setDesiredState(moduleStates[3]);
+    }
 
     /** Updates the field relative position of the robot. */
   public void updateOdometry() {

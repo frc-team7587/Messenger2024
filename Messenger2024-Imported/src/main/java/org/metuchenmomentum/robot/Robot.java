@@ -139,6 +139,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive(false);
+    SmartDashboard.putNumber("Robot Yaw", m_swerve.getRobotYaw());
+    SmartDashboard.putNumber("Tag Yaw", LimelightHelpers.getBotPose("limelight")[5]);
+
   }
 
   // simple proportional turning control with Limelight.
@@ -211,11 +214,12 @@ public class Robot extends TimedRobot {
     double tx = LimelightHelpers.getTX("limelight");  // Horizontal offset
     double ty = LimelightHelpers.getTY("limelight");  // Vertical offset
     double ta = LimelightHelpers.getTA("limelight");  // Target area
-    double targetYaw = LimelightHelpers.getBotPose("limelight")[5];
-    double currentYaw = m_swerve.getRobotYaw();
+    double currentYaw = LimelightHelpers.getBotPose("limelight")[5];
+    double target = -179;
 
     // Calculate angular velocity for aiming
     double aimingRot = tx * kP_Aim * DriveConstants.kMaxAngularSpeed;
+     aimingRot *= -1;
 
     // Desired area (distance goal) - This should be tuned based on real-world measurements
     double desiredArea = 4.5;  // Example: adjust based on desired distance
@@ -270,7 +274,7 @@ public class Robot extends TimedRobot {
       //rot = limelightOutputs[2];    // Rotation
 
       // Check if the robot is relatively aligned before applying rotation
-      if (Math.abs(xSpeed) < 0.1 && Math.abs(ySpeed) < 0.1) {
+      if (Math.abs(xSpeed) < 0.2 && Math.abs(ySpeed) < 0.2) {
         rot = limelightOutputs[2];    // Rotation
     } else {
         rot = 0; // No rotation until aligned

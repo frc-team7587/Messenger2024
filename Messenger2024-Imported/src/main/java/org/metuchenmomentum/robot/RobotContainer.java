@@ -215,7 +215,7 @@ shooter.stopShooter()
   
     
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Shoot Only");
+        return new PathPlannerAuto(" ");
     }
 
     // public Command autonomousLowerClimber() {
