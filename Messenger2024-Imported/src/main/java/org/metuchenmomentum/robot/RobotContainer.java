@@ -13,8 +13,10 @@ import org.metuchenmomentum.robot.subsystems.shooter.Shooter;
 import org.metuchenmomentum.robot.subsystems.shooter.ShooterSparkMax;
 import org.metuchenmomentum.robot.subsystems.vision.LimelightHelpers;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -215,7 +217,13 @@ shooter.stopShooter()
   
     
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto(" ");
+        try{
+            PathPlannerPath path = PathPlannerPath.fromPathFile("test");
+            return AutoBuilder.followPath(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // public Command autonomousLowerClimber() {

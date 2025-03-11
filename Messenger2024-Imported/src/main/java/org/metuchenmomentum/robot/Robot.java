@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        /*
+        
         autonomousCommand = robotContainer.getAutonomousCommand();
         //marquee
         m_autoSelected = m_chooser.getSelected();
@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
         }
-            */
+            
     }
 
     @Override
