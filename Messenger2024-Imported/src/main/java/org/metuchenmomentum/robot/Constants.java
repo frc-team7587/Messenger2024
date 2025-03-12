@@ -22,8 +22,8 @@ public final class Constants {
 
     public static final class DriveConstants {
         // Allowed maximum speeds of the robot
-        public static final double kMaxSpeed = 4.8; // m/s
-        public static final double kMaxAngularSpeed = 2 * Math.PI; // rad/s
+        public static final double kMaxSpeed = 2; // 4.8 m/s max
+        public static final double kMaxAngularSpeed = (2 * Math.PI) * 0.5; // rad/s
 
         public static final double kDirectionSlewRate = 1.2; // rad/s
         public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
@@ -40,6 +40,13 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
         );
+        public static final Translation2d[] moduleTranslations =
+        new Translation2d[] {
+          new Translation2d(kTrackWidth / 2.0, kWheelBase / 2.0),
+          new Translation2d(kTrackWidth / 2.0, -kWheelBase / 2.0),
+          new Translation2d(-kTrackWidth / 2.0, kWheelBase / 2.0),
+          new Translation2d(-kTrackWidth / 2.0, -kWheelBase / 2.0)
+        };
 
         // Angular offsets of the modules relative to the chassis in radians
         public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;

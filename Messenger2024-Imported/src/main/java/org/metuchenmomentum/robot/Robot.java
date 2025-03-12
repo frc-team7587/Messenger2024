@@ -28,10 +28,10 @@ public class Robot extends TimedRobot {
     private static final String kCustomAuto = "My Auto";
     private String m_autoSelected;
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
-    private Marquee displayDriver;
-    private DigitalOutput digOut0;
+    //private Marquee displayDriver;
+    //private DigitalOutput digOut0;
     //display sponsors
-    private DisplaySponsors displaySponsors;
+    //private DisplaySponsors displaySponsors;
     public static double getPeriod;
 
     private final XboxController m_controller = new XboxController(0);
@@ -49,26 +49,26 @@ public class Robot extends TimedRobot {
        // m_chooser.setDefaultOption("Default Auto", kDefaultAuto); 
       //  m_chooser.addOption("My Auto", kCustomAuto);
       //  SmartDashboard.putData("Auto choices", m_chooser);
-        digOut0 = new DigitalOutput(0);
-        digOut0.setPWMRate(1000);
-        digOut0.enablePWM(0.5);
-        DisplayConnection displayConnection = DisplayConnectionFactory.usbConnection();
+        // digOut0 = new DigitalOutput(0);
+        // digOut0.setPWMRate(1000);
+        // digOut0.enablePWM(0.5);
+        // DisplayConnection displayConnection = DisplayConnectionFactory.usbConnection();
         //displayDriver = new Marquee(DisplayConnectionFactory.usbConnection());
         //marquee
         //displayDriver.robotPeriodic();
         
         //display sponsors
-        Optional<Alliance> ally = DriverStation.getAlliance();
-          if (ally.get() == Alliance.Red){
-            Sponsors sponsors = new Sponsors("Red");
-           displaySponsors = new DisplaySponsors(sponsors.getList(), displayConnection, "Go Red!!!");
-            displaySponsors.init();
-          }
-          if (ally.get() == Alliance.Blue) {
-            Sponsors sponsors = new Sponsors("Blue");
-            displaySponsors = new DisplaySponsors(sponsors.getList(), displayConnection, "Go Blue!!!");
-            displaySponsors.init();
-          }
+        // Optional<Alliance> ally = DriverStation.getAlliance();
+        //   if (ally.get() == Alliance.Red){
+        //     Sponsors sponsors = new Sponsors("Red");
+        //    displaySponsors = new DisplaySponsors(sponsors.getList(), displayConnection, "Go Red!!!");
+        //     displaySponsors.init();
+        //   }
+        //   if (ally.get() == Alliance.Blue) {
+        //     Sponsors sponsors = new Sponsors("Blue");
+        //     displaySponsors = new DisplaySponsors(sponsors.getList(), displayConnection, "Go Blue!!!");
+        //     displaySponsors.init();
+        //   }
         
     }
 
@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         
         CommandScheduler.getInstance().run();
-        displaySponsors.robotPeriodic();
+        // displaySponsors.robotPeriodic();
         getPeriod = this.getPeriod();
    
     }
@@ -100,8 +100,6 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         
         autonomousCommand = robotContainer.getAutonomousCommand();
-        //marquee
-        m_autoSelected = m_chooser.getSelected();
         //displayDriver.autonomousInit();
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
@@ -138,9 +136,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    drive(false);
-    SmartDashboard.putNumber("Robot Yaw", m_swerve.getRobotYaw());
-    SmartDashboard.putNumber("Tag Yaw", LimelightHelpers.getBotPose("limelight")[5]);
+    drive(true);
+    // SmartDashboard.putNumber("Robot Yaw", m_swerve.getRobotYaw());
+    // SmartDashboard.putNumber("Tag Yaw", LimelightHelpers.getBotPose("limelight")[5]);
 
   }
 

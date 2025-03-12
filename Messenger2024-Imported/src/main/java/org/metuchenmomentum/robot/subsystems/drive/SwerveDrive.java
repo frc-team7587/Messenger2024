@@ -13,6 +13,8 @@ import com.pathplanner.lib.config.*;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +23,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -28,8 +32,28 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** The swerve drivetrain consisting of four independently-controlled swerve modules of turning and driving motors. */
 public class SwerveDrive extends SubsystemBase {
-
- private RobotConfig config;
+// Drive motor configuration
+  public static final int driveMotorCurrentLimit = 50;
+  public static final double wheelRadiusMeters = Units.inchesToMeters(1.5);
+  public static final double driveMotorReduction =
+      (45.0 * 22.0) / (14.0 * 15.0); // MAXSwerve with 14 pinion teeth and 22 spur teeth
+  public static final DCMotor driveGearbox = DCMotor.getNeoVortex(1);
+   // PathPlanner configuration
+   public static final double robotMassKg = 74.088;
+   public static final double robotMOI = 6.883;
+   public static final double wheelCOF = 1.2;
+   public static final RobotConfig config =
+       new RobotConfig(
+           robotMassKg,
+           robotMOI,
+           new ModuleConfig(
+               wheelRadiusMeters,
+               DriveConstants.kMaxSpeed,
+               wheelCOF,
+               driveGearbox.withReduction(driveMotorReduction),
+               driveMotorCurrentLimit,
+               1),
+           DriveConstants.moduleTranslations);
 
 
     private final SwerveModule frontLeftModule = new SwerveModule(
@@ -64,14 +88,22 @@ public class SwerveDrive extends SubsystemBase {
     private SlewRateLimiter rotationLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
 
     private double previousTime = WPIUtilJNI.now() * 1e-6;
+    private Rotation2d rawGyroRotation = new Rotation2d();
+
 
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
        // DriveConstants.kDriveKinematics, getRotation(), getModulePositions()
        DriveConstants.kDriveKinematics,
        getRotation(),
-       getModulePositions())
-    ;
-    
+       getModulePositions());
+    /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
+  below are robot specific, and should be tuned. */
+  private final SwerveDrivePoseEstimator m_poseEstimator =
+      new SwerveDrivePoseEstimator(
+          DriveConstants.kDriveKinematics,
+          getRotation(),
+          getModulePositions(),
+          new Pose2d());
 
     public SwerveDrive() {
 
@@ -83,7 +115,7 @@ public class SwerveDrive extends SubsystemBase {
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
         this::getPose, // Robot pose supplier
-        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
         () ->
             DriveConstants.kDriveKinematics.toChassisSpeeds(
                 getModuleStates()), // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -232,6 +264,18 @@ public class SwerveDrive extends SubsystemBase {
         rearLeftModule.setDesiredState(desiredStates[2]);
         rearRightModule.setDesiredState(desiredStates[3]);
     }
+
+    /** Resets the current odometry pose. */
+    public void setPose(Pose2d pose) {
+        gyro.setAngleAdjustment(pose.getRotation().getDegrees());
+        rawGyroRotation = pose.getRotation();
+    
+        // Yes I know it says that you don't need to reset the gyro rotation, but it tweaks out if you
+        // don't
+        m_poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+        odometry.resetPosition(rawGyroRotation, getModulePositions(), pose);
+      }
+
 
     /**
      * Resets the odometry of the robot.

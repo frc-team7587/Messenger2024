@@ -217,13 +217,15 @@ shooter.stopShooter()
   
     
     public Command getAutonomousCommand() {
-        try{
-            PathPlannerPath path = PathPlannerPath.fromPathFile("test");
-            return AutoBuilder.followPath(path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        // try{
+        //     PathPlannerPath path = PathPlannerPath.fromPathFile("test");
+        //     return AutoBuilder.followPath(path);
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
+        // return null;
+
+        return new PathPlannerAuto("test");
     }
 
     // public Command autonomousLowerClimber() {
